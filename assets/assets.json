@@ -1,0 +1,54 @@
+{
+  "title": "SCHLANGE PRESENTIERT: TOM 2000",
+  "scenes": [
+    {
+      "scene_id": "intro",
+      "prompt": "A man in traditional Bavarian Lederhosen and a cowboy hat walks into a modern tech office. He carries a laptop under one arm. The office has RGB lighting and monitors everywhere. Cinematic, comedic tone.",
+      "duration_seconds": 4.0,
+      "image_refs": [],
+      "subtitle": "SCHLANGE PRESENTIERT"
+    },
+    {
+      "scene_id": "coding",
+      "prompt": "Close-up of a screen showing Python code with German keywords like 'defn', 'sofern', 'verkuendet'. The code is being typed live. Matrix-like green text reflections on glasses.",
+      "duration_seconds": 5.0,
+      "image_refs": [],
+      "subtitle": "PROBIERT * AUSSER * ENDLICH"
+    },
+    {
+      "scene_id": "data_wizardry",
+      "prompt": "A dramatic montage of data flowing through pipes, transforming from raw JSON into a beautiful ranked playlist. Databricks-style notebook interface visible. Sparks and lightning effects.",
+      "duration_seconds": 5.0,
+      "image_refs": [],
+      "subtitle": "2000 Tracks analysiert..."
+    },
+    {
+      "scene_id": "playlist_reveal",
+      "prompt": "A big screen in the office shows the 'Tom 2000' Spotify playlist with 2000 tracks. People gather around. The playlist starts playing. Everyone nods to the beat.",
+      "duration_seconds": 5.0,
+      "image_refs": [],
+      "subtitle": "TOM 2000 -- Die Playlist"
+    },
+    {
+      "scene_id": "dj_moment",
+      "prompt": "The man is now behind a DJ booth in the office, wearing a Lederhosen-DJ hybrid outfit. He's mixing tracks while data visualizations dance on screens behind him. Epic lighting.",
+      "duration_seconds": 4.0,
+      "image_refs": [],
+      "subtitle": "Der Buereau-DJ"
+    },
+    {
+      "scene_id": "beer_cow",
+      "prompt": "A rubber cow wearing a tiny pair of Lederhosen sits next to a beer stein on the DJ booth. Confetti falls. The cow has sunglasses. Pure absurdity.",
+      "duration_seconds": 3.0,
+      "image_refs": [],
+      "subtitle": "Smutsahansi approved"
+    },
+    {
+      "scene_id": "qr_code",
+      "prompt": "Clean black screen with a large QR code in the center. Text above reads 'SCAN FOR TOM 2000'. Text below reads 'Powered by Schlange'. Minimal, clean design.",
+      "duration_seconds": 5.0,
+      "image_refs": [],
+      "subtitle": "Scan mich!"
+    }
+  ]
+}

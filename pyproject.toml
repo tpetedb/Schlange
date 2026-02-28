@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "schlange"
+version = "0.1.0"
+description = "Schlange -- Germanized Python preprocessor. Write Python in Old German, run it for real."
+readme = "README.md"
+license = {text = "Apache-2.0"}
+requires-python = ">=3.10"
+authors = [{name = "Tom Peters"}]
+keywords = ["python", "german", "transpiler", "preprocessor", "fun"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Interpreters",
+    "Topic :: Software Development :: Pre-processors",
+]
+
+dependencies = [
+    "click>=8.0",
+    "spotipy>=2.23",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "black>=23.0",
+    "ruff>=0.1",
+]
+video = [
+    "moviepy>=1.0",
+    "Pillow>=10.0",
+]
+
+[project.scripts]
+schlange = "schlange.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/tpetedb/Schlange"
+Repository = "https://github.com/tpetedb/Schlange"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["schlange*"]
+
+[tool.black]
+line-length = 120
+target-version = ["py310"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"
