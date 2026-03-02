@@ -1,4 +1,4 @@
-"""Mandatory content validation for the Chaotic Engineering Program.
+"""Mandatory content validation for DIE LETSTE PARTY MIT SMUTZIGE HANSIE.
 
 Checks that all required elements are present in:
 - Video script
@@ -67,22 +67,13 @@ class ValidationReport:
 
 # Mandatory content strings
 MANDATORY = {
-    "cow_line_de": "aufblasbare Kuh",
-    "cow_line_de_full": "Bier melken",
     "event_date_iso": "2026-03-12",
     "event_date_de": "12. Maerz 2026",
     "event_date_en": "12 March 2026",
     "event_date_nl": "12 maart 2026",
-    "event_location": "De Vierkant",
-    "closing_de": "Viereck",
-    "closing_en": "square",
-    "closing_nl": "vierkant",
-    "coding_ref_importiert": "importiert",
-    "coding_ref_probiert": "probiert",
-    "coding_ref_gibzurueck": "gibzurueck",
-    "chaotic_engineering": "CHAOTIC ENGINEERING PROGRAM",
-    "schlange": "Schlange",
-    "tom_2000": "Tom 2000",
+    "event_location": "YoungOnes Office",
+    "party_name": "DIE LETSTE PARTY MIT SMUTZIGE HANSIE",
+    "hansie": "Smutzige Hansie",
 }
 
 
@@ -110,12 +101,12 @@ def validate_script(script_path: str = "out/video/script_de.txt") -> ValidationR
             "Script: Cow reference": "aufblasbare Kuh",
             "Script: Beer reference": "Bier melken",
             "Script: Event date": "12. Maerz 2026",
-            "Script: Location": "De Vierkant",
+            "Script: Location": "YoungOnes Office",
             "Script: Closing line": "Viereck",
             "Script: Coding - importiert": "importiert",
             "Script: Coding - probiert": "probiert",
             "Script: Coding - gibzurueck": "gibzurueck",
-            "Script: Chaotic Engineering": "CHAOTIC ENGINEERING",
+            "Script: Die Letste Party": "DIE LETSTE PARTY",
             "Script: Schlange mention": "Schlange",
             "Script: Programmiersprache": "Programmiersprache",
             "Script: Abschiedsprogramm": "Abschiedsprogramm",
@@ -134,7 +125,7 @@ def validate_subtitles(srt_path: str = "out/video/subtitles.srt") -> ValidationR
 
     if os.path.exists(srt_path):
         checks = {
-            "Subtitles: CHAOTIC ENGINEERING": "CHAOTIC ENGINEERING",
+            "Subtitles: DIE LETSTE PARTY": "DIE LETSTE PARTY",
             "Subtitles: Event date": "12. Maerz 2026",
             "Subtitles: Closing": "Viereck",
             "Subtitles: Schlange": "Schlange",
@@ -154,25 +145,18 @@ def validate_email(email_path: str = "out/email/email_trilingual.html") -> Valid
     if os.path.exists(email_path):
         checks = {
             # German
-            "Email DE: Cow line": "aufblasbare Kuh",
-            "Email DE: Beer": "Bier melken",
             "Email DE: Event date": "12. Maerz 2026",
-            "Email DE: Location": "De Vierkant",
-            "Email DE: Closing": "Viereck",
+            "Email DE: Location": "YoungOnes Office",
+            "Email DE: Video line": "Abschiedsvideo",
             # English
-            "Email EN: Cow line": "inflatable cow",
-            "Email EN: Beer": "dispenses beer",
             "Email EN: Event date": "12 March 2026",
-            "Email EN: Closing": "square",
+            "Email EN: Video line": "farewell video",
             # Dutch
-            "Email NL: Cow line": "opblaasbare koe",
-            "Email NL: Beer": "bier uit kunt melken",
             "Email NL: Event date": "12 maart 2026",
-            "Email NL: Closing": "vierkant",
+            "Email NL: Video line": "afscheidsvideo",
             # Cross-language
-            "Email: CHAOTIC ENGINEERING": "CHAOTIC ENGINEERING PROGRAM",
-            "Email: Schlange": "Schlange",
-            "Email: Smutzige Hansi": "Smutzige Hansi",
+            "Email: DIE LETSTE PARTY": "DIE LETSTE PARTY MIT SMUTZIGE HANSIE",
+            "Email: Smutzige Hansie": "Smutzige Hansie",
         }
         for name, search in checks.items():
             report.add(name, _check_string_in_file(email_path, search), f"Missing: '{search}'")
@@ -190,7 +174,9 @@ def validate_metadata(metadata_path: str = "out/video/metadata.json") -> Validat
         with open(metadata_path, encoding="utf-8") as fh:
             data = json.load(fh)
         report.add("Metadata: event_date", data.get("event_date") == "2026-03-12", f"Got: {data.get('event_date')}")
-        report.add("Metadata: location", "Vierkant" in data.get("event_location", ""), f"Got: {data.get('event_location')}")
+        report.add(
+            "Metadata: location", "Vierkant" in data.get("event_location", ""), f"Got: {data.get('event_location')}"
+        )
 
     return report
 

@@ -1,5 +1,0 @@
-SCENE: explosion_intro
-PROMPT: Explosive opening. Black screen, then massive explosion overlay. Title text slams in: CHAOTIC ENGINEERING PROGRAM. Subtitle: Eine Smutzige Hansi Produktion. Fire particles, screen shake, impact sound.
-DURATION: 4.0s
-IMAGE REFS: 
-SUBTITLE: CHAOTIC ENGINEERING PROGRAM

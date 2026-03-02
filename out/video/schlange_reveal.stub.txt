@@ -1,5 +1,0 @@
-SCENE: schlange_reveal
-PROMPT: Screen shows Schlange code transforming into Python. Split screen: German keywords on left, Python on right. verkuendet becomes print. defn becomes def. Dramatic reveal: SCHLANGE -- Python auf Deutsch.
-DURATION: 6.0s
-IMAGE REFS: 
-SUBTITLE: SCHLANGE -- Python auf Deutsch

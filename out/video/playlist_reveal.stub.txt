@@ -1,5 +1,0 @@
-SCENE: playlist_reveal
-PROMPT: Spotify playlist Tom 2000 appears on screen. 2000 tracks scroll past dramatically. Play counts and hours displayed. Music visualization in background.
-DURATION: 6.0s
-IMAGE REFS: 
-SUBTITLE: TOM 2000 -- 2000 Tracks. 5706 Stunden.

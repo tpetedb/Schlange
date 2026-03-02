@@ -4,7 +4,7 @@
 
 Schlange is a Germanized Python preprocessor that lets you write Python using archaic German keywords. It uses token-based rewriting (not naive text replacement) so keywords inside strings and comments are never touched.
 
-It also powers the **CHAOTIC ENGINEERING PROGRAM** -- a fully automated pipeline that parses 6 years of Spotify history, generates a bombastic goodbye video, and sends a tri-lingual email invitation. One command. Pure chaos.
+It also powers **DIE LETSTE PARTY MIT SMUTZIGE HANSIE** -- a fully automated pipeline that parses 6 years of Spotify history, generates a bombastic goodbye video, and sends a tri-lingual email invitation. One command. Pure chaos.
 
 ```python
 # hello.schl.py
@@ -214,7 +214,7 @@ Copy `.env.example` to `.env` and configure:
 | `SPOTIPY_CLIENT_ID` | Spotify app client ID |
 | `SPOTIPY_CLIENT_SECRET` | Spotify app client secret |
 | `GOODBYE_DATE` | Event date (default: 2026-03-12) |
-| `GOODBYE_LOCATION` | Event location (default: De Vierkant) |
+| `GOODBYE_LOCATION` | Event location (default: YoungOnes Office) |
 | `EMAIL_FROM` | Sender email address |
 | `SMTP_HOST` | SMTP server hostname |
 | `RECIPIENTS` | Comma-separated recipient emails |

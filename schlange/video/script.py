@@ -11,26 +11,18 @@ from datetime import timedelta
 from typing import Any
 
 
-# The definitive narration script -- 8 scenes
+# The definitive narration script -- 9 scenes
+# "SMUTZIGE HANSIE presenteert den laatste party"
 SCRIPT_SCENES: list[dict[str, Any]] = [
     {
-        "id": "explosion_intro",
+        "id": "nuclear_intro",
         "duration": 4,
         "narration": "",
-        "subtitle": "CHAOTIC ENGINEERING PROGRAM",
-        "overlay": "Eine Smutzige Hansi Produktion",
+        "subtitle": "SMUTZIGE HANSIE PRESENTEERT",
+        "overlay": "DEN LAATSTE PARTY",
     },
     {
-        "id": "hansi_intro",
-        "duration": 5,
-        "narration": (
-            "Ich gehe bald...\n"
-            "Letzter Lacher fuer meine geliebten Kolleginnen und Kollegen."
-        ),
-        "subtitle": "Ich gehe bald...",
-    },
-    {
-        "id": "coding_chaos",
+        "id": "chaos_montage",
         "duration": 8,
         "narration": (
             "Smutzige Hansi hat nicht einfach gekuendigt.\n"
@@ -41,16 +33,25 @@ SCRIPT_SCENES: list[dict[str, Any]] = [
         "keywords": ["importiert", "probiert", "gibzurueck", "als"],
     },
     {
+        "id": "coding_cat_energy",
+        "duration": 6,
+        "narration": (
+            "Smutzige Hansi tippt wie eine Katze auf Speed.\n"
+            "Terminal-Befehle fliegen durch die Luft.\n"
+            "Deutsche Keywords ueberall."
+        ),
+        "subtitle": "CODING CAT ENERGY",
+    },
+    {
         "id": "schlange_reveal",
         "duration": 6,
         "narration": (
-            "Schlange -- ein deutscher Python-Interpreter-Wrapper.\n"
-            "Weil normale Programmierung zu langweilig war."
+            "Schlange -- ein deutscher Python-Interpreter-Wrapper.\n" "Weil normale Programmierung zu langweilig war."
         ),
         "subtitle": "SCHLANGE -- Python auf Deutsch",
     },
     {
-        "id": "playlist_reveal",
+        "id": "tom2000_reveal",
         "duration": 6,
         "narration": (
             "Tom 1000? Zu wenig.\n"
@@ -60,26 +61,28 @@ SCRIPT_SCENES: list[dict[str, Any]] = [
         "subtitle": "TOM 2000 -- 2000 Tracks. 5706 Stunden.",
     },
     {
-        "id": "cow_announcement",
+        "id": "ai_surprise",
         "duration": 6,
         "narration": (
-            "Die KI hat entschieden: Wir mieten eine riesige aufblasbare Kuh, "
-            "aus der man Bier melken kann."
+            "Die KI hat entschieden: Wir mieten eine riesige aufblasbare Kuh, " "aus der man Bier melken kann."
         ),
         "subtitle": "Die KI hat entschieden...",
     },
     {
-        "id": "event_cta",
-        "duration": 5,
-        "narration": (
-            "Donnerstag, 12. Maerz 2026.\n"
-            "De Vierkant."
-        ),
-        "subtitle": "Donnerstag, 12. Maerz 2026 -- De Vierkant",
+        "id": "oktoberfest_madness",
+        "duration": 6,
+        "narration": ("Biertische, Lederhosen, und eine Kuh.\n" "So feiert man einen Abschied."),
+        "subtitle": "OKTOBERFEST MADNESS",
     },
     {
-        "id": "closing",
-        "duration": 5,
+        "id": "final_cta",
+        "duration": 4,
+        "narration": ("Donnerstag, 12. Maerz 2026.\n" "YoungOnes Office."),
+        "subtitle": "Donnerstag, 12. Maerz 2026 -- YoungOnes Office",
+    },
+    {
+        "id": "stupid_ending",
+        "duration": 4,
         "narration": "Sei dabei -- oder sei ein Viereck.",
         "subtitle": "Sei dabei -- oder sei ein Viereck.",
     },
@@ -94,8 +97,8 @@ def generate_script(output_path: str = "out/video/script_de.txt") -> str:
     """
     lines: list[str] = []
     lines.append("=" * 60)
-    lines.append("  CHAOTIC ENGINEERING PROGRAM")
-    lines.append("  Video Script -- Smutzige Hansi Remix")
+    lines.append("  SMUTZIGE HANSIE PRESENTEERT DEN LAATSTE PARTY")
+    lines.append("  Video Script -- 9 Szenen")
     lines.append("=" * 60)
     lines.append("")
 
@@ -195,23 +198,26 @@ def generate_metadata(output_path: str = "out/video/metadata.json") -> dict:
     """
     total_duration = sum(s["duration"] for s in SCRIPT_SCENES)
     metadata = {
-        "title": "CHAOTIC ENGINEERING PROGRAM -- Smutzige Hansi Remix",
+        "title": "SMUTZIGE HANSIE PRESENTEERT DEN LAATSTE PARTY",
         "duration_seconds": total_duration,
         "scenes": len(SCRIPT_SCENES),
         "event_date": "2026-03-12",
         "event_date_de": "Donnerstag, 12. Maerz 2026",
-        "event_location": "De Vierkant",
+        "event_location": "YoungOnes Office",
         "language": "de",
-        "reference_video": "data/smutzige_hansie_video.mp4",
-        "scene_list": [
-            {"id": s["id"], "duration": s["duration"], "subtitle": s["subtitle"]}
-            for s in SCRIPT_SCENES
+        "background_music": "data/DJ Dreckisch - Barbieboy (feat. Ennoia) [Extended Mix].wav",
+        "character_images": [
+            "data/smutzigehansie-reference-image-1.png",
+            "data/smutzigehansie-reference-image-2.png",
+            "data/smutzigehansie-reference-image-3.png",
         ],
+        "reference_video": "data/smutzige_hansie_video.mp4",
+        "scene_list": [{"id": s["id"], "duration": s["duration"], "subtitle": s["subtitle"]} for s in SCRIPT_SCENES],
         "mandatory_checks": {
             "cow_line": True,
             "event_date": True,
             "coding_reference": True,
-            "chaotic_engineering": True,
+            "schlange_reveal": True,
             "closing_line": True,
         },
     }

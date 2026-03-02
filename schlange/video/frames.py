@@ -94,7 +94,7 @@ def create_placeholder_frames(
 
     captions = [
         "Smutzige Hansi beim letzten Commit",
-        "CHAOTIC ENGINEERING PROGRAM",
+        "DIE LETSTE PARTY MIT SMUTZIGE HANSIE",
         "importiert * probiert * gibzurueck",
         "Sei dabei -- oder sei ein Viereck",
     ]
@@ -116,7 +116,7 @@ def create_placeholder_frames(
 
             # Dark background with accent
             draw.rectangle([(0, 0), (1280, 80)], fill=(240, 73, 35))  # #F04923 header
-            draw.text((40, 20), "CHAOTIC ENGINEERING PROGRAM", fill=(255, 255, 255), font=font)
+            draw.text((40, 20), "DIE LETSTE PARTY MIT SMUTZIGE HANSIE", fill=(255, 255, 255), font=font)
             draw.text((640, 360), captions[i], fill=(255, 191, 0), font=font, anchor="mm")
             draw.text((640, 680), f"Frame {i + 1}/{num_frames}", fill=(100, 100, 100), font=font_small, anchor="mm")
 

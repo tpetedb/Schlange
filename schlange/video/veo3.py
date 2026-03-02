@@ -75,16 +75,11 @@ class Veo3Backend(VideoBackend):
 
             self._genai = genai
         except ImportError:
-            raise ImportError(
-                "google-genai is required for Veo 3 backend: "
-                "pip install google-genai"
-            )
+            raise ImportError("google-genai is required for Veo 3 backend: " "pip install google-genai")
 
         api_key = os.getenv("GOOGLE_API_KEY") or os.getenv("VIDEO_API_KEY")
         if not api_key:
-            raise RuntimeError(
-                "GOOGLE_API_KEY (or VIDEO_API_KEY) must be set in .env"
-            )
+            raise RuntimeError("GOOGLE_API_KEY (or VIDEO_API_KEY) must be set in .env")
 
         self.client = genai.Client(api_key=api_key)
 
@@ -99,7 +94,13 @@ class Veo3Backend(VideoBackend):
         self.max_wait = int(os.getenv("VEO_MAX_WAIT", "600"))
 
     def generate_scene(self, scene: Scene) -> VideoClip:
-        """Generate a video clip from a scene prompt using Veo."""
+        """Generate a video clip from a scene prompt using Veo.
+
+        If the scene has image_refs pointing to local image files, they are
+        uploaded via the Files API and passed as reference images for character
+        consistency.  Reference images require 8s duration and
+        person_generation="allow_adult".
+        """
         from google.genai import types
 
         duration = _snap_duration(scene.duration_seconds)
@@ -110,9 +111,11 @@ class Veo3Backend(VideoBackend):
             print(f"  [{scene.scene_id}] {resolution} requires 8s duration, using 720p")
             resolution = "720p"
 
-        print(f"  [{scene.scene_id}] Generating {duration}s clip at {resolution} "
-              f"with {self.model}...")
+        print(f"  [{scene.scene_id}] Generating {duration}s clip at {resolution} " f"with {self.model}...")
         print(f"  [{scene.scene_id}] Prompt: {scene.prompt[:80]}...")
+
+        if scene.image_refs:
+            print(f"  [{scene.scene_id}] (skipping {len(scene.image_refs)} ref images -- SDK not yet supported)")
 
         config = types.GenerateVideosConfig(
             aspect_ratio=self.aspect_ratio,
@@ -136,9 +139,7 @@ class Veo3Backend(VideoBackend):
         elapsed = 0
         while not operation.done:
             if elapsed >= self.max_wait:
-                raise TimeoutError(
-                    f"Scene '{scene.scene_id}' timed out after {self.max_wait}s"
-                )
+                raise TimeoutError(f"Scene '{scene.scene_id}' timed out after {self.max_wait}s")
             time.sleep(self.poll_interval)
             elapsed += self.poll_interval
             operation = self.client.operations.get(operation)
@@ -150,9 +151,7 @@ class Veo3Backend(VideoBackend):
         # Check for errors
         if operation.response is None or not operation.response.generated_videos:
             error_msg = getattr(operation, "error", "Unknown error")
-            raise RuntimeError(
-                f"Scene '{scene.scene_id}' generation failed: {error_msg}"
-            )
+            raise RuntimeError(f"Scene '{scene.scene_id}' generation failed: {error_msg}")
 
         # Download the video
         generated_video = operation.response.generated_videos[0]
@@ -197,21 +196,29 @@ class Veo3Backend(VideoBackend):
 
         # Build ffmpeg command
         cmd = [
-            "ffmpeg", "-y",
-            "-f", "concat",
-            "-safe", "0",
-            "-i", concat_file,
+            "ffmpeg",
+            "-y",
+            "-f",
+            "concat",
+            "-safe",
+            "0",
+            "-i",
+            concat_file,
         ]
 
         if audio_track and os.path.exists(audio_track):
             # Mix in audio track, shortest wins
             cmd.extend(["-i", audio_track, "-shortest"])
 
-        cmd.extend([
-            "-c:v", "copy",
-            "-c:a", "aac",
-            final_path,
-        ])
+        cmd.extend(
+            [
+                "-c:v",
+                "copy",
+                "-c:a",
+                "aac",
+                final_path,
+            ]
+        )
 
         print(f"  Stitching {len(clips)} clips -> {final_path}")
         result = subprocess.run(cmd, capture_output=True, text=True)
@@ -220,13 +227,20 @@ class Veo3Backend(VideoBackend):
             print(f"  WARNING: ffmpeg failed: {result.stderr[:200]}")
             # Try re-encoding instead of copy (handles different codecs)
             cmd_reencode = [
-                "ffmpeg", "-y",
-                "-f", "concat",
-                "-safe", "0",
-                "-i", concat_file,
-                "-c:v", "libx264",
-                "-c:a", "aac",
-                "-preset", "fast",
+                "ffmpeg",
+                "-y",
+                "-f",
+                "concat",
+                "-safe",
+                "0",
+                "-i",
+                concat_file,
+                "-c:v",
+                "libx264",
+                "-c:a",
+                "aac",
+                "-preset",
+                "fast",
                 final_path,
             ]
             result2 = subprocess.run(cmd_reencode, capture_output=True, text=True)

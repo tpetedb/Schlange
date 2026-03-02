@@ -1,29 +1,43 @@
 {
-  "title": "CHAOTIC ENGINEERING PROGRAM -- Smutzige Hansi Remix",
+  "title": "SMUTZIGE HANSIE PRESENTEERT DEN LAATSTE PARTY",
   "event_date": "2026-03-12",
-  "event_location": "De Vierkant",
-  "duration_target": "45-60 seconds",
+  "event_location": "YoungOnes Office",
+  "duration_target": "50-60 seconds",
+  "audio_track": "data/DJ Dreckisch - Barbieboy (feat. Ennoia) [Extended Mix].wav",
+  "character_images": [
+    "data/smutzigehansie-reference-image-1.png",
+    "data/smutzigehansie-reference-image-2.png",
+    "data/smutzigehansie-reference-image-3.png"
+  ],
   "scenes": [
     {
-      "scene_id": "explosion_intro",
-      "prompt": "Explosive opening. Black screen, then massive explosion overlay. Title text slams in: CHAOTIC ENGINEERING PROGRAM. Subtitle: Eine Smutzige Hansi Produktion. Fire particles, screen shake, impact sound.",
+      "scene_id": "nuclear_intro",
+      "prompt": "Nuclear explosion opening. Black screen, then massive mushroom cloud. Title text slams in: SMUTZIGE HANSIE PRESENTEERT. Subtitle: DEN LAATSTE PARTY. Radiation symbols, fire particles, screen shake, impact sound.",
       "duration_seconds": 4.0,
       "image_refs": [],
-      "subtitle": "CHAOTIC ENGINEERING PROGRAM"
+      "subtitle": "SMUTZIGE HANSIE PRESENTEERT"
     },
     {
-      "scene_id": "hansi_intro",
-      "prompt": "Smutzige Hansi appears. Reference footage from data/. Dramatic entrance, slow-motion effect, lens flare.",
-      "duration_seconds": 5.0,
-      "image_refs": ["data/smutzige_hansie_video.mp4"],
-      "subtitle": "Ich gehe bald..."
-    },
-    {
-      "scene_id": "coding_chaos",
-      "prompt": "Meme-cat chaotic coding energy. Smutzige Hansi typing aggressively at a laptop. Overdramatic zooms. Terminal text flying across screen. Schlange keywords visible: importiert, probiert, gibzurueck. Explosion overlays. Fast cuts. Matrix rain of German keywords.",
+      "scene_id": "chaos_montage",
+      "prompt": "Rapid-fire montage of chaotic coding moments. Explosions, terminal text flying across screen, Schlange keywords visible: importiert, probiert, gibzurueck. A man in a hoodie typing aggressively at a laptop. Fast cuts. Matrix rain of German keywords.",
       "duration_seconds": 8.0,
-      "image_refs": [],
+      "image_refs": [
+        "data/smutzigehansie-reference-image-1.png",
+        "data/smutzigehansie-reference-image-2.png",
+        "data/smutzigehansie-reference-image-3.png"
+      ],
       "subtitle": "PROBIERT * AUSSER * ENDLICH"
+    },
+    {
+      "scene_id": "coding_cat_energy",
+      "prompt": "Meme-cat chaotic coding energy. A man typing at a laptop like a caffeinated cat. Terminal commands flying. Overdramatic zooms. Green text on black screens. Hacker aesthetic. RGB keyboard flashing.",
+      "duration_seconds": 6.0,
+      "image_refs": [
+        "data/smutzigehansie-reference-image-1.png",
+        "data/smutzigehansie-reference-image-2.png",
+        "data/smutzigehansie-reference-image-3.png"
+      ],
+      "subtitle": "CODING CAT ENERGY"
     },
     {
       "scene_id": "schlange_reveal",
@@ -33,30 +47,41 @@
       "subtitle": "SCHLANGE -- Python auf Deutsch"
     },
     {
-      "scene_id": "playlist_reveal",
-      "prompt": "Spotify playlist Tom 2000 appears on screen. 2000 tracks scroll past dramatically. Play counts and hours displayed. Music visualization in background.",
+      "scene_id": "tom2000_reveal",
+      "prompt": "Spotify playlist Tom 2000 appears on screen. 2000 tracks scroll past dramatically. Play counts and hours displayed. Music visualization in background. Neon glow.",
       "duration_seconds": 6.0,
       "image_refs": [],
       "subtitle": "TOM 2000 -- 2000 Tracks. 5706 Stunden."
     },
     {
-      "scene_id": "cow_announcement",
-      "prompt": "Giant inflatable beer cow appears on screen. Dramatic zoom. Confetti explosion. Beer taps attached to cow udders. Everyone looks shocked and delighted.",
+      "scene_id": "ai_surprise",
+      "prompt": "Giant inflatable beer cow appears on screen. Dramatic zoom. Confetti explosion. Beer taps attached to cow udders. Everyone looks shocked and delighted. Party atmosphere.",
       "duration_seconds": 6.0,
       "image_refs": [],
       "subtitle": "Die KI hat entschieden..."
     },
     {
-      "scene_id": "event_cta",
-      "prompt": "Clean event card with bold typography. Date: Donnerstag, 12. Maerz 2026. Location: De Vierkant. Hazard stripes border. Countdown timer effect.",
-      "duration_seconds": 5.0,
-      "image_refs": [],
-      "subtitle": "Donnerstag, 12. Maerz 2026 -- De Vierkant"
+      "scene_id": "oktoberfest_madness",
+      "prompt": "Full Oktoberfest madness. Beer tables, Lederhosen, a man partying with colleagues. The inflatable cow is visible in the background. Confetti, streamers, people laughing and dancing. Pure chaos.",
+      "duration_seconds": 6.0,
+      "image_refs": [
+        "data/smutzigehansie-reference-image-1.png",
+        "data/smutzigehansie-reference-image-2.png",
+        "data/smutzigehansie-reference-image-3.png"
+      ],
+      "subtitle": "OKTOBERFEST MADNESS"
     },
     {
-      "scene_id": "closing",
-      "prompt": "Final explosion. Smutzige Hansi walks away from the camera. Text appears: Sei dabei -- oder sei ein Viereck. Powered by Schlange logo. Fade to black.",
-      "duration_seconds": 5.0,
+      "scene_id": "final_cta",
+      "prompt": "Clean event card with bold typography. Date: Donnerstag, 12. Maerz 2026. Location: YoungOnes Office. Hazard stripes border. Countdown timer effect. Urgent red glow.",
+      "duration_seconds": 4.0,
+      "image_refs": [],
+      "subtitle": "Donnerstag, 12. Maerz 2026 -- YoungOnes Office"
+    },
+    {
+      "scene_id": "stupid_ending",
+      "prompt": "Final explosion. A man walks away from the camera in slow motion. Text appears: Sei dabei -- oder sei ein Viereck. Powered by Schlange logo. Fade to black with nuclear glow.",
+      "duration_seconds": 4.0,
       "image_refs": [],
       "subtitle": "Sei dabei -- oder sei ein Viereck."
     }

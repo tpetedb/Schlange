@@ -1,8 +1,8 @@
-b# =============================================================================
+# =============================================================================
 #  GO.SCHL.PY -- Der Meister-Orchestrator
 # =============================================================================
 #
-#  CHAOTIC ENGINEERING PROGRAM -- One Button To Rule Them All
+#  DIE LETSTE PARTY MIT SMUTZIGE HANSIE -- One Button To Rule Them All
 #
 #  This is the master pipeline that:
 #    1. Loads environment config
@@ -38,12 +38,11 @@ von dotenv importiert load_dotenv
 defn banner():
     verkuendet("")
     verkuendet("  ===================================================")
-    verkuendet("  =   CHAOTIC ENGINEERING PROGRAM                   =")
-    verkuendet("  =   Eine Smutzige Hansi Produktion                =")
+    verkuendet("  =   SMUTZIGE HANSIE PRESENTEERT DEN LETSE PARTY     =")
     verkuendet("  =   Powered by Schlange -- Python auf Deutsch      =")
     verkuendet("  ===================================================")
     verkuendet("")
-    verkuendet("  Donnerstag, 12. Maerz 2026 -- De Vierkant")
+    verkuendet("  Donnerstag, 12. Maerz 2026 -- YoungOnes Office")
     verkuendet("  Sei dabei -- oder sei ein Viereck.")
     verkuendet("")
 
@@ -98,7 +97,7 @@ defn schritt_umgebung():
     # Pruefe wichtige Variablen
     checks = {
         "GOODBYE_DATE": os.getenv("GOODBYE_DATE", "2026-03-12"),
-        "GOODBYE_LOCATION": os.getenv("GOODBYE_LOCATION", "De Vierkant"),
+        "GOODBYE_LOCATION": os.getenv("GOODBYE_LOCATION", "YoungOnes Office"),
         "VIDEO_BACKEND": os.getenv("VIDEO_BACKEND", "placeholder"),
     }
 
@@ -171,7 +170,7 @@ defn schritt_video(video_pfad):
     sofern backend_name inwendig ("veo3", "veo", "veo3.1", "gemini"):
         verkuendet(f"  Modell: {os.getenv('VEO_MODEL', 'veo3.1')}")
         verkuendet(f"  Aufloesung: {os.getenv('VEO_RESOLUTION', '720p')}")
-        verkuendet(f"  Geschaetzte Kosten: ~$3.20 (8 Szenen x $0.40)")
+        verkuendet(f"  Geschaetzte Kosten: ~$3.60 (9 Szenen x $0.40)")
         verkuendet(f"  Geschaetzte Dauer: 1-6 Minuten pro Szene")
 
     backend = get_backend(output_dir="out/video")
@@ -222,19 +221,10 @@ defn schritt_frames(video_pfad):
 # =============================================================================
 
 defn schritt_email(frames):
-    """Generiere die tri-linguale bombastische Email."""
+    """Generiere die tri-linguale Email."""
     verkuendet("\n[6/7] Tri-linguale Email generieren...")
 
     von schlange.email.template importiert generate_email_html
-
-    # Links zusammenstellen
-    links = {
-        "GitHub": os.getenv("GITHUB_REPO_URL", "https://github.com/tpetedb/Schlange"),
-        "Spotify Tom 2000": os.getenv("SPOTIFY_PLAYLIST_URL", ""),
-        "Website": os.getenv("TOM_WEBSITE_URL", ""),
-    }
-    # Entferne leere Links
-    links = {k: v fuerwahr k, v inwendig links.items() sofern v}
 
     # CID fuer erstes Frame-Bild
     img_cid = Nichts
@@ -242,13 +232,11 @@ defn schritt_email(frames):
         img_cid = "frame_coding"
 
     html = generate_email_html(
-        links=links,
         img_cid=img_cid,
         output_path="out/email/email_trilingual.html",
     )
     verkuendet(f"  Email generiert: out/email/email_trilingual.html")
     verkuendet(f"  Sprachen: DE / EN / NL")
-    verkuendet(f"  Links: {', '.join(links.keys())}")
     sofern img_cid:
         verkuendet(f"  Inline-Bild: CID={img_cid}")
 
@@ -292,16 +280,26 @@ defn schritt_senden(html, frames, img_cid, senden):
     bild_pfade = []
     bild_cids = []
     sofern img_cid und frames:
-        # Erstes Frame als Inline-Bild
         bild_pfade = [frames[0]]
         bild_cids = [img_cid]
+
+    # Video als Attachment anfuegen (email-optimierte Version)
+    anhaenge = []
+    video_pfad = "out/video/final_email.mp4"
+    sofern nichten os.path.exists(video_pfad):
+        video_pfad = "out/video/final.mp4"
+    sofern os.path.exists(video_pfad):
+        anhaenge = [video_pfad]
+    sonst:
+        verkuendet(f"  WARNUNG: Video nicht gefunden")
 
     ergebnis = send_email(
         html_body=html,
         recipients=empfaenger,
-        subject="CHAOTIC ENGINEERING PROGRAM -- Donnerstag, 12. Maerz 2026",
+        subject="DIE LETSTE PARTY MIT SMUTZIGE HANSIE -- Donnerstag, 12. Maerz 2026",
         image_paths=bild_pfade,
         image_cids=bild_cids,
+        attachments=anhaenge,
         dry_run=nichten senden,
     )
 
@@ -383,9 +381,13 @@ defn hauptprogramm():
     bericht = schritt_validierung()
 
     sofern nichten bericht.passed:
-        verkuendet("\n  BUILD FAILED -- Pflicht-Inhalte fehlen!")
-        verkuendet("  Pipeline stoppt. Behebe die Fehler und versuche es erneut.")
-        sys.exit(1)
+        sofern config["skip_video"]:
+            verkuendet("\n  WARNUNG: Validierung unvollstaendig (--skip-video aktiv)")
+            verkuendet("  Video-Checks ignoriert -- fahre mit Email fort.")
+        sonst:
+            verkuendet("\n  BUILD FAILED -- Pflicht-Inhalte fehlen!")
+            verkuendet("  Pipeline stoppt. Behebe die Fehler und versuche es erneut.")
+            sys.exit(1)
 
     # Senden
     sofern html und nichten config["skip_email"]:
@@ -393,14 +395,14 @@ defn hauptprogramm():
 
     # Abschluss
     verkuendet("\n" + "=" * 55)
-    verkuendet("  CHAOTIC ENGINEERING PROGRAM -- PIPELINE ABGESCHLOSSEN")
+    verkuendet("  SMUTZIGE HANSIE PRESENTEERT -- PIPELINE ABGESCHLOSSEN")
     verkuendet("=" * 55)
     verkuendet("  Video:   out/video/final.mp4")
     verkuendet("  Script:  out/video/script_de.txt")
     verkuendet("  Email:   out/email/email_trilingual.html")
     verkuendet("  Frames:  out/email/img/")
     verkuendet("")
-    verkuendet("  Donnerstag, 12. Maerz 2026 -- De Vierkant")
+    verkuendet("  Donnerstag, 12. Maerz 2026 -- YoungOnes Office")
     verkuendet("  PROBIERT * AUSSER * ENDLICH")
     verkuendet("")
 

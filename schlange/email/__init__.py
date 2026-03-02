@@ -1,1 +1,1 @@
-"""Schlange email engine -- tri-lingual bombastic email for the Chaotic Engineering Program."""
+"""Schlange email engine -- tri-lingual bombastic email for DIE LETSTE PARTY MIT SMUTZIGE HANSIE."""

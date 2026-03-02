@@ -170,7 +170,8 @@ def render_video(
     Args:
         assets_json_path: Path to the storyboard JSON.
         backend: Video generation backend (defaults to PlaceholderBackend).
-        audio_track: Optional audio file to mix in.
+        audio_track: Optional audio file to mix in. If None, reads
+            ``audio_track`` from the assets JSON when present.
         output_path: Output video filename.
 
     Returns:
@@ -179,8 +180,28 @@ def render_video(
     if backend is None:
         backend = PlaceholderBackend()
 
-    scenes = load_storyboard(assets_json_path)
+    # Load storyboard and optionally extract audio_track from the JSON
+    with open(assets_json_path, encoding="utf-8") as fh:
+        data = json.load(fh)
+
+    if audio_track is None:
+        audio_track = data.get("audio_track")
+
+    scenes = []
+    for s in data.get("scenes", []):
+        scenes.append(
+            Scene(
+                scene_id=s["scene_id"],
+                prompt=s["prompt"],
+                duration_seconds=s.get("duration_seconds", 4.0),
+                image_refs=s.get("image_refs", []),
+                subtitle=s.get("subtitle", ""),
+            )
+        )
+
     print(f"Loaded {len(scenes)} scenes from {assets_json_path}")
+    if audio_track:
+        print(f"Audio track: {audio_track}")
 
     clips = []
     for scene in scenes:

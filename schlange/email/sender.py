@@ -7,6 +7,8 @@ Supports dry-run mode, recipient CSV, and environment variable config.
 from __future__ import annotations
 
 import csv
+import email.encoders
+import email.mime.base
 import email.mime.image
 import email.mime.multipart
 import email.mime.text
@@ -64,7 +66,7 @@ def load_recipients(
 def send_email(
     html_body: str,
     recipients: list[str],
-    subject: str = "CHAOTIC ENGINEERING PROGRAM -- Smutzige Hansi",
+    subject: str = "DIE LETSTE PARTY MIT SMUTZIGE HANSIE -- Donnerstag, 12. Maerz 2026",
     from_addr: str | None = None,
     smtp_host: str | None = None,
     smtp_port: int = 587,
@@ -72,9 +74,11 @@ def send_email(
     smtp_pass: str | None = None,
     image_paths: list[str] | None = None,
     image_cids: list[str] | None = None,
+    attachments: list[str] | None = None,
     dry_run: bool = True,
+    **kwargs: Any,
 ) -> dict[str, Any]:
-    """Send the email with optional CID inline images.
+    """Send the email with optional CID inline images and file attachments.
 
     Args:
         html_body: The HTML email body.
@@ -87,6 +91,7 @@ def send_email(
         smtp_pass: SMTP password (or SMTP_PASS env var).
         image_paths: List of image file paths to embed.
         image_cids: List of Content-IDs for each image.
+        attachments: List of file paths to attach (e.g. video files).
         dry_run: If True, don't actually send -- just validate and log.
 
     Returns:
@@ -102,6 +107,7 @@ def send_email(
         "subject": subject,
         "from": from_addr,
         "image_count": len(image_paths) if image_paths else 0,
+        "attachment_count": len(attachments) if attachments else 0,
         "dry_run": dry_run,
         "sent": False,
         "errors": [],
@@ -119,26 +125,48 @@ def send_email(
     if report["errors"]:
         return report
 
-    # Build MIME message
-    msg = email.mime.multipart.MIMEMultipart("related")
+    # Build MIME message: mixed (for attachments) wrapping related (for inline images)
+    msg = email.mime.multipart.MIMEMultipart("mixed")
     msg["Subject"] = subject
     msg["From"] = from_addr
     msg["To"] = ", ".join(recipients)
 
-    # Attach HTML body
+    # Related part for HTML + inline images
+    related = email.mime.multipart.MIMEMultipart("related")
     html_part = email.mime.text.MIMEText(html_body, "html", "utf-8")
-    msg.attach(html_part)
+    related.attach(html_part)
 
-    # Attach inline images
+    # Attach inline images to related part
     if image_paths and image_cids:
         for img_path, cid in zip(image_paths, image_cids):
             if os.path.exists(img_path):
                 with open(img_path, "rb") as fh:
                     img_data = fh.read()
-                mime_img = email.mime.image.MIMEImage(img_data)
+                mime_img = email.mime.image.MIMEImage(img_data, _subtype="jpeg")
                 mime_img.add_header("Content-ID", f"<{cid}>")
                 mime_img.add_header("Content-Disposition", "inline", filename=os.path.basename(img_path))
-                msg.attach(mime_img)
+                related.attach(mime_img)
+
+    msg.attach(related)
+
+    # Attach files (e.g. video)
+    if attachments:
+        for filepath in attachments:
+            if not os.path.exists(filepath):
+                print(f"  WARNUNG: Attachment nicht gefunden: {filepath}")
+                continue
+            with open(filepath, "rb") as fh:
+                file_data = fh.read()
+            part = email.mime.base.MIMEBase("application", "octet-stream")
+            part.set_payload(file_data)
+            email.encoders.encode_base64(part)
+            part.add_header(
+                "Content-Disposition", "attachment",
+                filename=os.path.basename(filepath),
+            )
+            msg.attach(part)
+            size_mb = len(file_data) / (1024 * 1024)
+            print(f"  Attachment: {os.path.basename(filepath)} ({size_mb:.1f} MB)")
 
     if dry_run:
         print(f"  [DRY RUN] Would send to {len(recipients)} recipients:")
@@ -147,12 +175,13 @@ def send_email(
         print(f"  [DRY RUN] Subject: {subject}")
         print(f"  [DRY RUN] From: {from_addr or '(not set)'}")
         print(f"  [DRY RUN] Images: {len(image_paths) if image_paths else 0}")
+        print(f"  [DRY RUN] Attachments: {len(attachments) if attachments else 0}")
         report["sent"] = False
         return report
 
     # Actually send
     try:
-        with smtplib.SMTP(smtp_host, smtp_port, timeout=30) as server:
+        with smtplib.SMTP(smtp_host, smtp_port, timeout=120) as server:
             server.starttls()
             if smtp_user and smtp_pass:
                 server.login(smtp_user, smtp_pass)

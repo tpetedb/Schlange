@@ -1,5 +1,0 @@
-SCENE: closing
-PROMPT: Final explosion. Smutzige Hansi walks away from the camera. Text appears: Sei dabei -- oder sei ein Viereck. Powered by Schlange logo. Fade to black.
-DURATION: 5.0s
-IMAGE REFS: 
-SUBTITLE: Sei dabei -- oder sei ein Viereck.
