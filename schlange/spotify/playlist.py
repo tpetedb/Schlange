@@ -67,24 +67,33 @@ class PlaylistBuilder:
         """Persist resolution cache to disk."""
         items = []
         for mr in self._resolution_cache.values():
-            items.append({
-                "track_name": mr.track_name,
-                "artist_name": mr.artist_name,
-                "spotify_uri": mr.spotify_uri,
-                "spotify_name": mr.spotify_name,
-                "spotify_artist": mr.spotify_artist,
-                "score": mr.score,
-                "matched": mr.matched,
-            })
+            items.append(
+                {
+                    "track_name": mr.track_name,
+                    "artist_name": mr.artist_name,
+                    "spotify_uri": mr.spotify_uri,
+                    "spotify_name": mr.spotify_name,
+                    "spotify_artist": mr.spotify_artist,
+                    "score": mr.score,
+                    "matched": mr.matched,
+                }
+            )
         with open(self._cache_path, "w", encoding="utf-8") as fh:
             json.dump(items, fh, indent=2, ensure_ascii=False)
 
     def authenticate(self) -> None:
-        """Authenticate with Spotify using OAuth Authorization Code flow."""
+        """Authenticate with Spotify using OAuth Authorization Code flow.
+
+        Disables auto-browser open (doesn't work in WSL without interop).
+        Prints the auth URL for manual copy-paste.
+        """
         if spotipy is None:
             raise ImportError("spotipy is required: pip install spotipy")
 
-        auth_manager = SpotifyOAuth(scope=self.SCOPES)
+        auth_manager = SpotifyOAuth(
+            scope=self.SCOPES,
+            open_browser=False,
+        )
         self._sp = spotipy.Spotify(auth_manager=auth_manager)
         self._user_id = self._sp.current_user()["id"]
 
@@ -145,8 +154,8 @@ class PlaylistBuilder:
     def _add_tracks_via_api(self, playlist_id: str, uris: list[str]) -> None:
         """Add tracks to a playlist using direct API calls.
 
-        Uses requests.post to /playlists/{id}/tracks instead of spotipy's
-        playlist_add_items -- works around 403 in Spotify Development mode.
+        Uses the /playlists/{id}/items endpoint (the /tracks endpoint is
+        deprecated and returns 403 for Development Mode apps).
         """
         import requests
 
@@ -155,13 +164,11 @@ class PlaylistBuilder:
             "Authorization": f"Bearer {token}",
             "Content-Type": "application/json",
         }
-        url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
+        url = f"https://api.spotify.com/v1/playlists/{playlist_id}/items"
 
         resp = requests.post(url, headers=headers, json={"uris": uris}, timeout=30)
         if resp.status_code not in (200, 201):
-            raise RuntimeError(
-                f"Failed to add tracks (HTTP {resp.status_code}): {resp.text}"
-            )
+            raise RuntimeError(f"Failed to add tracks (HTTP {resp.status_code}): {resp.text}")
 
     def _search_track(self, track_name: str, artist_name: str) -> MatchResult:
         """Search Spotify for a track and return the best match."""
@@ -346,6 +353,73 @@ class PlaylistBuilder:
 
         print(f"  Total: {len(valid_uris)} tracks added to '{name}'")
         return playlist_url
+
+    def populate_existing_playlist(
+        self,
+        playlist_id: str,
+        uris: list[str],
+        replace: bool = False,
+    ) -> str:
+        """Add tracks to an existing Spotify playlist.
+
+        Args:
+            playlist_id: Spotify playlist ID.
+            uris: List of Spotify track URIs (spotify:track:...).
+            replace: If True, clear the playlist first, then add.
+
+        Returns:
+            The Spotify playlist URL.
+        """
+        if not self._sp or not self._user_id:
+            raise RuntimeError("Not authenticated. Call authenticate() first.")
+
+        import requests
+
+        valid_uris = [u for u in uris if u and u.startswith("spotify:track:")]
+        print(f"  {len(valid_uris)} valid URIs out of {len(uris)} total")
+
+        # Optionally clear the playlist first
+        if replace:
+            token = self._sp.auth_manager.get_access_token(as_dict=False)
+            headers = {
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/json",
+            }
+            url = f"https://api.spotify.com/v1/playlists/{playlist_id}/items"
+            resp = requests.put(url, headers=headers, json={"uris": []}, timeout=30)
+            if resp.status_code not in (200, 201):
+                print(f"  Warning: could not clear playlist (HTTP {resp.status_code})")
+            else:
+                print("  Playlist cleared")
+
+        # Add in batches of 100
+        total_batches = (len(valid_uris) + self.BATCH_SIZE - 1) // self.BATCH_SIZE
+        for i in range(0, len(valid_uris), self.BATCH_SIZE):
+            batch = valid_uris[i : i + self.BATCH_SIZE]
+            batch_num = i // self.BATCH_SIZE + 1
+            self._add_tracks_via_api(playlist_id, batch)
+            print(f"  Batch {batch_num}/{total_batches}: added {len(batch)} tracks")
+
+        playlist_url = f"https://open.spotify.com/playlist/{playlist_id}"
+        print(f"  Total: {len(valid_uris)} tracks added")
+        return playlist_url
+
+    @staticmethod
+    def extract_playlist_id(url_or_id: str) -> str:
+        """Extract a Spotify playlist ID from a URL or return as-is.
+
+        Handles:
+          - https://open.spotify.com/playlist/ABC123?si=xyz
+          - spotify:playlist:ABC123
+          - ABC123
+        """
+        if "open.spotify.com/playlist/" in url_or_id:
+            # Extract between /playlist/ and next ? or end
+            part = url_or_id.split("/playlist/")[1]
+            return part.split("?")[0]
+        if url_or_id.startswith("spotify:playlist:"):
+            return url_or_id.split(":")[2]
+        return url_or_id
 
     def generate_report(self, results: list[MatchResult], output_path: str | None = None) -> str:
         """Generate a resolution report.

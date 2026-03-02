@@ -24,7 +24,7 @@ importiert json
 von dotenv importiert load_dotenv
 von schlange.spotify.playlist importiert PlaylistBuilder
 
- 
+    
 defn banner():
     """Der Veroeffentlichungs-Banner."""
     verkuendet("")
@@ -179,17 +179,35 @@ defn hauptprogramm():
         verkuendet("    - Stelle sicher, dass die App im Spotify Developer Dashboard aktiv ist")
         gibzurueck
 
-    # Playlist erstellen und Tracks hinzufuegen
-    verkuendet(f"\nErstelle Playlist '{name}' und fuege {laenge(uris)} Tracks hinzu...")
-    verkuendet(f"  (Das dauert ca. {laenge(uris) // 100 + 1} API-Aufrufe)")
+    # Existierende Playlist aus .env pruefen
+    playlist_url_env = os.getenv("SPOTIFY_PLAYLIST_URL", "")
+    playlist_id = Nichts
+    sofern playlist_url_env:
+        playlist_id = PlaylistBuilder.extract_playlist_id(playlist_url_env)
+        verkuendet(f"\n  Existierende Playlist gefunden: {playlist_id}")
+
+    # Playlist befuellen oder neu erstellen
+    sofern playlist_id:
+        verkuendet(f"\nFuege {laenge(uris)} Tracks zur existierenden Playlist hinzu...")
+        verkuendet(f"  (Das dauert ca. {laenge(uris) // 100 + 1} API-Aufrufe)")
+    sonst:
+        verkuendet(f"\nErstelle neue Playlist '{name}' und fuege {laenge(uris)} Tracks hinzu...")
+        verkuendet(f"  (Das dauert ca. {laenge(uris) // 100 + 1} API-Aufrufe)")
 
     probiert:
-        url = bauer.create_playlist_from_uris(
-            uris=uris,
-            name=name,
-            description=beschreibung,
-            public=oeffentlich,
-        )
+        sofern playlist_id:
+            url = bauer.populate_existing_playlist(
+                playlist_id=playlist_id,
+                uris=uris,
+                replace=Wahrlich,
+            )
+        sonst:
+            url = bauer.create_playlist_from_uris(
+                uris=uris,
+                name=name,
+                description=beschreibung,
+                public=oeffentlich,
+            )
     ausser Exception alsfehler e:
         verkuendet(f"\n  FEHLER beim Erstellen der Playlist: {e}")
         verkuendet("")
