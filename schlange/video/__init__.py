@@ -133,6 +133,32 @@ def load_storyboard(assets_json_path: str) -> list[Scene]:
     return scenes
 
 
+def get_backend(output_dir: str = "out/video") -> VideoBackend:
+    """Create a video backend based on the VIDEO_BACKEND environment variable.
+
+    Supported values:
+        "placeholder" (default) -- stub files for development
+        "veo3" -- Google Veo 3.1 via Gemini API (requires GOOGLE_API_KEY)
+
+    Returns:
+        A configured VideoBackend instance.
+    """
+    backend_name = os.environ.get("VIDEO_BACKEND", "placeholder").lower().strip()
+
+    if backend_name in ("veo3", "veo", "veo3.1", "gemini"):
+        from schlange.video.veo3 import Veo3Backend
+
+        return Veo3Backend(output_dir=output_dir)
+
+    if backend_name in ("placeholder", ""):
+        return PlaceholderBackend(output_dir=output_dir)
+
+    raise ValueError(
+        f"Unknown VIDEO_BACKEND '{backend_name}'. "
+        f"Supported: placeholder, veo3"
+    )
+
+
 def render_video(
     assets_json_path: str,
     backend: VideoBackend | None = None,

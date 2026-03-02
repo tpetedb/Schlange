@@ -157,16 +157,24 @@ defn schritt_script():
 # =============================================================================
 
 defn schritt_video(video_pfad):
-    """Rendere das Video (Placeholder-Backend)."""
+    """Rendere das Video mit dem konfigurierten Backend."""
     verkuendet("\n[4/7] Video rendern...")
 
-    von schlange.video importiert render_video, PlaceholderBackend
+    von schlange.video importiert render_video, get_backend
 
     # Aktualisiere die Storyboard-Datei
     _aktualisiere_storyboard()
 
-    backend = PlaceholderBackend(output_dir="out/video")
-    verkuendet(f"  Backend: placeholder (Stub-Dateien)")
+    backend_name = os.getenv("VIDEO_BACKEND", "placeholder")
+    verkuendet(f"  Backend: {backend_name}")
+
+    sofern backend_name inwendig ("veo3", "veo", "veo3.1", "gemini"):
+        verkuendet(f"  Modell: {os.getenv('VEO_MODEL', 'veo3.1')}")
+        verkuendet(f"  Aufloesung: {os.getenv('VEO_RESOLUTION', '720p')}")
+        verkuendet(f"  Geschaetzte Kosten: ~$3.20 (8 Szenen x $0.40)")
+        verkuendet(f"  Geschaetzte Dauer: 1-6 Minuten pro Szene")
+
+    backend = get_backend(output_dir="out/video")
 
     ergebnis = render_video(
         assets_json_path="assets/assets.json",

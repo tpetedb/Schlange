@@ -38,6 +38,7 @@ dev = [
     "ruff>=0.1",
 ]
 video = [
+    "google-genai>=1.0",
     "moviepy>=1.0",
     "Pillow>=10.0",
 ]
