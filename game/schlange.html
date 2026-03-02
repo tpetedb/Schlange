@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Schlange -- Fang den Hansie!</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background: #000;
+    color: #fff;
+    font-family: 'Courier New', monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+h1 {
+    color: #F04923;
+    font-size: 28px;
+    letter-spacing: 4px;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    color: #FFBF00;
+    font-size: 14px;
+    margin-bottom: 15px;
+    letter-spacing: 2px;
+}
+
+#game-container {
+    position: relative;
+    border: 3px solid #F04923;
+    background: #0a0a0a;
+}
+
+canvas {
+    display: block;
+}
+
+#overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 10;
+}
+
+#overlay.hidden { display: none; }
+
+#overlay h2 {
+    color: #FFBF00;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+#overlay p {
+    color: #ccc;
+    font-size: 14px;
+    margin-bottom: 5px;
+    text-align: center;
+    max-width: 350px;
+    line-height: 1.5;
+}
+
+#overlay .start-btn {
+    margin-top: 15px;
+    padding: 12px 30px;
+    background: #F04923;
+    color: #fff;
+    border: none;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    letter-spacing: 2px;
+    border-radius: 4px;
+}
+
+#overlay .start-btn:hover {
+    background: #FFBF00;
+    color: #000;
+}
+
+#score-bar {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 400px;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+#score-bar span {
+    color: #FFBF00;
+}
+
+.controls {
+    margin-top: 15px;
+    color: #666;
+    font-size: 12px;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.controls kbd {
+    background: #222;
+    border: 1px solid #444;
+    padding: 2px 6px;
+    border-radius: 3px;
+    color: #FFBF00;
+    font-size: 11px;
+}
+
+/* Mobile D-pad */
+#dpad {
+    display: none;
+    margin-top: 15px;
+    position: relative;
+    width: 150px;
+    height: 150px;
+}
+
+#dpad button {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: #222;
+    border: 2px solid #F04923;
+    color: #FFBF00;
+    font-size: 20px;
+    font-family: 'Courier New', monospace;
+    cursor: pointer;
+    border-radius: 4px;
+    -webkit-tap-highlight-color: transparent;
+}
+
+#dpad button:active { background: #F04923; color: #000; }
+
+#btn-up    { top: 0;   left: 50px; }
+#btn-down  { top: 100px; left: 50px; }
+#btn-left  { top: 50px; left: 0; }
+#btn-right { top: 50px; left: 100px; }
+
+.footer {
+    margin-top: 20px;
+    font-size: 11px;
+    color: #333;
+}
+
+.footer a { color: #0067A5; text-decoration: none; }
+.footer a:hover { color: #FFBF00; }
+
+@media (pointer: coarse) {
+    #dpad { display: block; }
+}
+
+/* Game over specific */
+#final-score { color: #F04923; font-size: 36px; font-weight: bold; }
+#high-score-msg { color: #00A86B; font-size: 14px; }
+
+/* Submit score button */
+.submit-btn {
+    display: none;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background: #FFBF00;
+    color: #000;
+    border: none;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    letter-spacing: 1px;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.submit-btn:hover {
+    background: #00A86B;
+    color: #fff;
+}
+
+/* Cow prize banner */
+.cow-prize {
+    margin-top: 8px;
+    padding: 8px 15px;
+    background: #1a1a00;
+    border: 1px dashed #FFBF00;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #FFBF00;
+    text-align: center;
+    max-width: 350px;
+    line-height: 1.4;
+}
+
+/* Hansie counter in corner */
+.hansie-count {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 13px;
+    color: #FFBF00;
+    z-index: 5;
+    pointer-events: none;
+}
+</style>
+</head>
+<body>
+
+<h1>SCHLANGE</h1>
+<p class="subtitle">Fang den Smutzige Hansie!</p>
+
+<div id="game-container">
+    <canvas id="game" width="400" height="400"></canvas>
+    <div class="hansie-count" id="hansie-count"></div>
+
+    <div id="overlay">
+        <h2 id="overlay-title">SCHLANGE</h2>
+        <p id="overlay-text">
+            Du bist die Schlange. Fang so viele Smutzige Hansies wie moeglich.
+            Aber pass auf -- beisze dich nicht selbst!
+        </p>
+        <p class="cow-prize">
+            &#128004; PREIS: Der hoechste Score melkt als Erster die 3,5 Meter hohe Bierkuh auf der Party! &#127866;
+        </p>
+        <p id="overlay-score" style="display:none;"></p>
+        <p id="high-score-msg" style="display:none;"></p>
+        <a class="submit-btn" id="submit-btn" style="display:none;">&#128232; SCORE EINREICHEN</a>
+        <button class="start-btn" id="start-btn">SPIELEN</button>
+    </div>
+</div>
+
+<div id="score-bar">
+    <span>Punkte: <b id="score">0</b></span>
+    <span>Rekord: <b id="high-score">0</b></span>
+</div>
+
+<div class="controls">
+    <kbd>&uarr;</kbd> <kbd>&darr;</kbd> <kbd>&larr;</kbd> <kbd>&rarr;</kbd> oder <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>
+</div>
+
+<div id="dpad">
+    <button id="btn-up">&uarr;</button>
+    <button id="btn-down">&darr;</button>
+    <button id="btn-left">&larr;</button>
+    <button id="btn-right">&rarr;</button>
+</div>
+
+<p class="footer">
+    Powered by <a href="https://github.com/tpetedb/Schlange">Schlange</a> -- Python auf Deutsch
+</p>
+
+<script>
+(function() {
+    'use strict';
+
+    // --- Config ---
+    const GRID = 20;
+    const COLS = 20;
+    const ROWS = 20;
+    const W = COLS * GRID;
+    const H = ROWS * GRID;
+    const BASE_SPEED = 130;    // ms per tick at start
+    const SPEED_INC = 2;       // ms faster per food eaten
+    const MIN_SPEED = 50;
+
+    // Colors (YoungOnes palette)
+    const COL_BG       = '#0a0a0a';
+    const COL_SNAKE    = '#00A86B';
+    const COL_SNAKE_HD = '#00C77B';
+    const COL_FOOD     = '#FFBF00';
+    const COL_FOOD2    = '#F04923';
+    const COL_GRID     = '#111';
+    const COL_EYES     = '#000';
+
+    // --- State ---
+    let snake, dir, nextDir, food, score, highScore, speed, gameLoop, alive;
+
+    // --- DOM ---
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+    canvas.width = W;
+    canvas.height = H;
+
+    const overlay     = document.getElementById('overlay');
+    const overlayT    = document.getElementById('overlay-title');
+    const overlayTxt  = document.getElementById('overlay-text');
+    const overlayScr  = document.getElementById('overlay-score');
+    const highScoreEl = document.getElementById('high-score-msg');
+    const startBtn    = document.getElementById('start-btn');
+    const submitBtn   = document.getElementById('submit-btn');
+    const scoreEl     = document.getElementById('score');
+    const hiScoreEl   = document.getElementById('high-score');
+    const hansieCount = document.getElementById('hansie-count');
+
+    // Load high score
+    highScore = parseInt(localStorage.getItem('schlange_hs') || '0', 10);
+    hiScoreEl.textContent = highScore;
+
+    // --- Hansie faces (drawn procedurally) ---
+    const hansieMessages = [
+        'Tschuess!', 'Doei!', 'Bye!', 'Ciao!', 'Ade!',
+        'Servus!', 'Bis dann!', 'Mach\'s gut!', 'Vaarwel!',
+        'Tot ziens!', 'See ya!', 'Later!', 'Peace!',
+    ];
+
+    function init() {
+        snake = [{x: 10, y: 10}, {x: 9, y: 10}, {x: 8, y: 10}];
+        dir = {x: 1, y: 0};
+        nextDir = {x: 1, y: 0};
+        score = 0;
+        speed = BASE_SPEED;
+        alive = true;
+        scoreEl.textContent = '0';
+        hansieCount.textContent = '';
+        placeFood();
+        overlay.classList.add('hidden');
+    }
+
+    function placeFood() {
+        let pos;
+        do {
+            pos = {
+                x: Math.floor(Math.random() * COLS),
+                y: Math.floor(Math.random() * ROWS),
+            };
+        } while (snake.some(s => s.x === pos.x && s.y === pos.y));
+        food = pos;
+    }
+
+    function tick() {
+        dir = {...nextDir};
+
+        const head = {x: snake[0].x + dir.x, y: snake[0].y + dir.y};
+
+        // Wall collision
+        if (head.x < 0 || head.x >= COLS || head.y < 0 || head.y >= ROWS) {
+            return gameOver();
+        }
+
+        // Self collision
+        if (snake.some(s => s.x === head.x && s.y === head.y)) {
+            return gameOver();
+        }
+
+        snake.unshift(head);
+
+        // Eat food?
+        if (head.x === food.x && head.y === food.y) {
+            score++;
+            scoreEl.textContent = score;
+            hansieCount.textContent = score + ' Hansie' + (score !== 1 ? 's' : '') + ' gefangen';
+            speed = Math.max(MIN_SPEED, BASE_SPEED - score * SPEED_INC);
+            placeFood();
+            // Restart loop with new speed
+            clearInterval(gameLoop);
+            gameLoop = setInterval(tick, speed);
+        } else {
+            snake.pop();
+        }
+
+        draw();
+    }
+
+    function draw() {
+        // Background
+        ctx.fillStyle = COL_BG;
+        ctx.fillRect(0, 0, W, H);
+
+        // Grid lines
+        ctx.strokeStyle = COL_GRID;
+        ctx.lineWidth = 0.5;
+        for (let x = 0; x <= W; x += GRID) {
+            ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+        }
+        for (let y = 0; y <= H; y += GRID) {
+            ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+        }
+
+        // Snake body
+        for (let i = snake.length - 1; i >= 0; i--) {
+            const s = snake[i];
+            const isHead = i === 0;
+            const t = i / snake.length;
+            ctx.fillStyle = isHead ? COL_SNAKE_HD : COL_SNAKE;
+            ctx.globalAlpha = isHead ? 1 : 0.5 + 0.5 * (1 - t);
+
+            const pad = isHead ? 1 : 2;
+            const r = isHead ? 4 : 3;
+            roundRect(ctx, s.x * GRID + pad, s.y * GRID + pad, GRID - pad * 2, GRID - pad * 2, r);
+            ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+
+        // Snake eyes
+        if (snake.length > 0) {
+            const h = snake[0];
+            ctx.fillStyle = COL_EYES;
+            const cx = h.x * GRID + GRID / 2;
+            const cy = h.y * GRID + GRID / 2;
+            const eyeOff = 3;
+            const eyeR = 2;
+
+            // Position eyes based on direction
+            let e1x, e1y, e2x, e2y;
+            if (dir.x === 1) { // right
+                e1x = cx + 3; e1y = cy - eyeOff; e2x = cx + 3; e2y = cy + eyeOff;
+            } else if (dir.x === -1) { // left
+                e1x = cx - 3; e1y = cy - eyeOff; e2x = cx - 3; e2y = cy + eyeOff;
+            } else if (dir.y === -1) { // up
+                e1x = cx - eyeOff; e1y = cy - 3; e2x = cx + eyeOff; e2y = cy - 3;
+            } else { // down
+                e1x = cx - eyeOff; e1y = cy + 3; e2x = cx + eyeOff; e2y = cy + 3;
+            }
+            ctx.beginPath(); ctx.arc(e1x, e1y, eyeR, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(e2x, e2y, eyeR, 0, Math.PI * 2); ctx.fill();
+        }
+
+        // Food (Hansie face)
+        drawHansie(food.x * GRID, food.y * GRID, GRID);
+    }
+
+    function drawHansie(x, y, size) {
+        const cx = x + size / 2;
+        const cy = y + size / 2;
+        const r = size / 2 - 2;
+
+        // Face circle
+        ctx.fillStyle = COL_FOOD;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Hat (tiny party hat)
+        ctx.fillStyle = COL_FOOD2;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy - r - 3);
+        ctx.lineTo(cx - 4, cy - r + 4);
+        ctx.lineTo(cx + 4, cy - r + 4);
+        ctx.closePath();
+        ctx.fill();
+
+        // Eyes
+        ctx.fillStyle = '#000';
+        ctx.beginPath(); ctx.arc(cx - 3, cy - 1, 1.5, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(cx + 3, cy - 1, 1.5, 0, Math.PI * 2); ctx.fill();
+
+        // Smile
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(cx, cy + 1, 3, 0.1 * Math.PI, 0.9 * Math.PI);
+        ctx.stroke();
+    }
+
+    function roundRect(ctx, x, y, w, h, r) {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.lineTo(x + w - r, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+        ctx.lineTo(x + w, y + h - r);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+        ctx.lineTo(x + r, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+        ctx.lineTo(x, y + r);
+        ctx.quadraticCurveTo(x, y, x + r, y);
+        ctx.closePath();
+    }
+
+    function gameOver() {
+        alive = false;
+        clearInterval(gameLoop);
+
+        const isNew = score > highScore;
+        if (isNew) {
+            highScore = score;
+            localStorage.setItem('schlange_hs', String(highScore));
+            hiScoreEl.textContent = highScore;
+        }
+
+        const msg = hansieMessages[Math.floor(Math.random() * hansieMessages.length)];
+
+        overlayT.textContent = 'GAME OVER';
+        overlayTxt.innerHTML = msg + '<br>Du hast <b>' + score + '</b> Hansie' + (score !== 1 ? 's' : '') + ' gefangen.';
+        overlayScr.style.display = 'block';
+        overlayScr.innerHTML = '<span id="final-score">' + score + '</span>';
+
+        if (isNew && score > 0) {
+            highScoreEl.style.display = 'block';
+            highScoreEl.textContent = 'NEUER REKORD!';
+            // Show submit button with mailto link
+            var playerName = localStorage.getItem('schlange_name') || '';
+            var mailSubject = encodeURIComponent('SCHLANGE HIGH SCORE: ' + score + ' Hansies!');
+            var mailBody = encodeURIComponent(
+                'SCHLANGE HIGH SCORE SUBMISSION\n' +
+                '================================\n\n' +
+                'Name: ' + (playerName || '(dein Name hier)') + '\n' +
+                'Score: ' + score + ' Hansies\n' +
+                'Datum: ' + new Date().toLocaleString('de-DE') + '\n\n' +
+                'Ich will die Bierkuh zuerst melken! \n'
+            );
+            submitBtn.href = 'mailto:t.peters@youngones.works?subject=' + mailSubject + '&body=' + mailBody;
+            submitBtn.style.display = 'inline-block';
+        } else {
+            highScoreEl.style.display = 'none';
+            submitBtn.style.display = 'none';
+        }
+
+        startBtn.textContent = 'NOCHMAL';
+        overlay.classList.remove('hidden');
+    }
+
+    // --- Input ---
+    function setDir(dx, dy) {
+        // Prevent 180-degree turns
+        if (dir.x === -dx && dir.y === -dy) return;
+        nextDir = {x: dx, y: dy};
+    }
+
+    document.addEventListener('keydown', function(e) {
+        switch (e.key) {
+            case 'ArrowUp':    case 'w': case 'W': e.preventDefault(); setDir(0, -1); break;
+            case 'ArrowDown':  case 's': case 'S': e.preventDefault(); setDir(0,  1); break;
+            case 'ArrowLeft':  case 'a': case 'A': e.preventDefault(); setDir(-1, 0); break;
+            case 'ArrowRight': case 'd': case 'D': e.preventDefault(); setDir(1,  0); break;
+            case ' ': case 'Enter':
+                e.preventDefault();
+                if (!alive) { startGame(); }
+                break;
+        }
+    });
+
+    // D-pad buttons
+    document.getElementById('btn-up').addEventListener('click',    function() { setDir(0, -1); });
+    document.getElementById('btn-down').addEventListener('click',  function() { setDir(0,  1); });
+    document.getElementById('btn-left').addEventListener('click',  function() { setDir(-1, 0); });
+    document.getElementById('btn-right').addEventListener('click', function() { setDir(1,  0); });
+
+    // Swipe support
+    let touchStartX = 0, touchStartY = 0;
+    canvas.addEventListener('touchstart', function(e) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+    }, {passive: true});
+    canvas.addEventListener('touchend', function(e) {
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        if (Math.abs(dx) > Math.abs(dy)) {
+            setDir(dx > 0 ? 1 : -1, 0);
+        } else {
+            setDir(0, dy > 0 ? 1 : -1);
+        }
+    }, {passive: true});
+
+    // --- Start ---
+    function startGame() {
+        init();
+        draw();
+        gameLoop = setInterval(tick, speed);
+    }
+
+    startBtn.addEventListener('click', startGame);
+
+    // Initial draw
+    snake = [{x: 10, y: 10}, {x: 9, y: 10}, {x: 8, y: 10}];
+    dir = {x: 1, y: 0};
+    nextDir = {x: 1, y: 0};
+    food = {x: 15, y: 10};
+    score = 0;
+    draw();
+})();
+</script>
+</body>
+</html>

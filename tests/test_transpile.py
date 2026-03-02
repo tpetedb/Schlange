@@ -282,3 +282,78 @@ class TestExecution:
         ns: dict = {}
         exec(python_code, ns)
         assert ns["ergebnis"] == [4, 6, 8]
+
+
+class TestAnfuehrungszeichen:
+    """anfuehrungszeichen replaces German quote words with actual quotes."""
+
+    def test_basic_double_quotes(self) -> None:
+        source = "verkuendet(anfuehrungszeichen Hallo Welt anfuehrungszeichen)"
+        result = transpile(source)
+        assert 'print("Hallo Welt")' in result
+
+    def test_single_quotes(self) -> None:
+        source = "x = einzelanfuehrungszeichen abc einzelanfuehrungszeichen"
+        result = transpile(source)
+        assert "x = 'abc'" in result
+
+    def test_triple_quotes(self) -> None:
+        source = "x = dreifachanfuehrungszeichen mehrzeilig dreifachanfuehrungszeichen"
+        result = transpile(source)
+        assert 'x = """mehrzeilig"""' in result
+
+    def test_fstring(self) -> None:
+        source = "verkuendet(f-anfuehrungszeichen Hallo {name} f-anfuehrungszeichen)"
+        result = transpile(source)
+        assert 'print(f"Hallo {name}")' in result
+
+    def test_rstring(self) -> None:
+        source = "muster = r-anfuehrungszeichen \\d+ r-anfuehrungszeichen"
+        result = transpile(source)
+        assert 'muster = r"\\d+"' in result
+
+    def test_bstring(self) -> None:
+        source = "daten = b-anfuehrungszeichen hallo b-anfuehrungszeichen"
+        result = transpile(source)
+        assert 'daten = b"hallo"' in result
+
+    def test_mixed_with_regular_quotes(self) -> None:
+        source = 'verkuendet(anfuehrungszeichen Hallo anfuehrungszeichen + " Welt")'
+        result = transpile(source)
+        assert 'print("Hallo" + " Welt")' in result
+
+    def test_multiple_pairs_on_one_line(self) -> None:
+        source = "x = anfuehrungszeichen a anfuehrungszeichen + anfuehrungszeichen b anfuehrungszeichen"
+        result = transpile(source)
+        assert 'x = "a" + "b"' in result
+
+    def test_comment_line_not_touched(self) -> None:
+        source = "# anfuehrungszeichen should stay\nx = 1"
+        result = transpile(source)
+        assert "anfuehrungszeichen" in result
+
+    def test_anfuehrungszeichen_executes(self, capsys: pytest.CaptureFixture) -> None:
+        source = "verkuendet(anfuehrungszeichen Schlange lebt! anfuehrungszeichen)"
+        python_code = transpile(source)
+        exec(python_code)
+        captured = capsys.readouterr()
+        assert "Schlange lebt!" in captured.out
+
+    def test_fstring_executes(self) -> None:
+        source = "name = anfuehrungszeichen Hansie anfuehrungszeichen\nergebnis = f-anfuehrungszeichen Hallo {name} f-anfuehrungszeichen"
+        python_code = transpile(source)
+        ns: dict = {}
+        exec(python_code, ns)
+        assert ns["ergebnis"] == "Hallo Hansie"
+
+    def test_full_german_function(self) -> None:
+        source = (
+            "defn begruessung(name):\n"
+            "    gibzurueck f-anfuehrungszeichen Hallo {name}! f-anfuehrungszeichen\n"
+            "\n"
+            "ergebnis = begruessung(anfuehrungszeichen Welt anfuehrungszeichen)"
+        )
+        python_code = transpile(source)
+        ns: dict = {}
+        exec(python_code, ns)
+        assert ns["ergebnis"] == "Hallo Welt!"
