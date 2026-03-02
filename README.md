@@ -132,6 +132,7 @@ Because what farewell project is complete without a browser game?
 Open [game/schlange.html](game/schlange.html) -- zero dependencies, one HTML file. You are the Schlange. Catch as many Smutzige Hansies as possible. The game speeds up. You will die. Your high score is saved locally.
 
 Features:
+
 - Hansie faces with party hats as food
 - YoungOnes color palette (OLED black, obviously)
 - Mobile d-pad + swipe controls
