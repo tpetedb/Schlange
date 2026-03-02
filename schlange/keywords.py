@@ -94,6 +94,22 @@ BUILTINS: dict[str, str] = {
 }
 
 # ---------------------------------------------------------------------------
+# Quote aliases: German words that replace quote characters
+# ---------------------------------------------------------------------------
+QUOTE_MAP: dict[str, str] = {
+    "anfuehrungszeichen": '"',
+    "einzelanfuehrungszeichen": "'",
+    "dreifachanfuehrungszeichen": '"""',
+}
+
+# Prefix modifiers for f-strings / r-strings / b-strings
+QUOTE_PREFIXES: dict[str, str] = {
+    "f-anfuehrungszeichen": 'f"',
+    "r-anfuehrungszeichen": 'r"',
+    "b-anfuehrungszeichen": 'b"',
+}
+
+# ---------------------------------------------------------------------------
 # Combined map used by the transpiler
 # ---------------------------------------------------------------------------
 FULL_MAP: dict[str, str] = {**KEYWORDS, **BUILTINS}
