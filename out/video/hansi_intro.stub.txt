@@ -1,0 +1,5 @@
+SCENE: hansi_intro
+PROMPT: Smutzige Hansi appears. Reference footage from data/. Dramatic entrance, slow-motion effect, lens flare.
+DURATION: 5.0s
+IMAGE REFS: data/smutzige_hansie_video.mp4
+SUBTITLE: Ich gehe bald...

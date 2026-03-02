@@ -1,0 +1,5 @@
+SCENE: cow_announcement
+PROMPT: Giant inflatable beer cow appears on screen. Dramatic zoom. Confetti explosion. Beer taps attached to cow udders. Everyone looks shocked and delighted.
+DURATION: 6.0s
+IMAGE REFS: 
+SUBTITLE: Die KI hat entschieden...

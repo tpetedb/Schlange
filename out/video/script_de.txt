@@ -1,0 +1,56 @@
+============================================================
+  CHAOTIC ENGINEERING PROGRAM
+  Video Script -- Smutzige Hansi Remix
+============================================================
+
+--- Scene: explosion_intro (4s) ---
+[SUBTITLE] CHAOTIC ENGINEERING PROGRAM
+[OVERLAY]  Eine Smutzige Hansi Produktion
+[NO NARRATION -- visual only]
+
+--- Scene: hansi_intro (5s) ---
+[SUBTITLE] Ich gehe bald...
+[NARRATION]
+  Ich gehe bald...
+  Letzter Lacher fuer meine geliebten Kolleginnen und Kollegen.
+
+--- Scene: coding_chaos (8s) ---
+[SUBTITLE] PROBIERT * AUSSER * ENDLICH
+[KEYWORDS] importiert, probiert, gibzurueck, als
+[NARRATION]
+  Smutzige Hansi hat nicht einfach gekuendigt.
+  Smutzige Hansi hat eine Programmiersprache gebaut.
+  Und damit ein chaotisches Abschiedsprogramm gestartet.
+
+--- Scene: schlange_reveal (6s) ---
+[SUBTITLE] SCHLANGE -- Python auf Deutsch
+[NARRATION]
+  Schlange -- ein deutscher Python-Interpreter-Wrapper.
+  Weil normale Programmierung zu langweilig war.
+
+--- Scene: playlist_reveal (6s) ---
+[SUBTITLE] TOM 2000 -- 2000 Tracks. 5706 Stunden.
+[NARRATION]
+  Tom 1000? Zu wenig.
+  Tom 2000 -- featuring Schlange.
+  Automatisch generiert aus 6 Jahren Spotify-Geschichte.
+
+--- Scene: cow_announcement (6s) ---
+[SUBTITLE] Die KI hat entschieden...
+[NARRATION]
+  Die KI hat entschieden: Wir mieten eine riesige aufblasbare Kuh, aus der man Bier melken kann.
+
+--- Scene: event_cta (5s) ---
+[SUBTITLE] Donnerstag, 12. Maerz 2026 -- De Vierkant
+[NARRATION]
+  Donnerstag, 12. Maerz 2026.
+  De Vierkant.
+
+--- Scene: closing (5s) ---
+[SUBTITLE] Sei dabei -- oder sei ein Viereck.
+[NARRATION]
+  Sei dabei -- oder sei ein Viereck.
+
+============================================================
+  Total duration: 45s
+============================================================

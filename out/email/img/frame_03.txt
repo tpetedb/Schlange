@@ -1,0 +1,3 @@
+PLACEHOLDER FRAME 3
+Caption: importiert * probiert * gibzurueck
+Resolution: 1280x720

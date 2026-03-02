@@ -1,0 +1,5 @@
+SCENE: event_cta
+PROMPT: Clean event card with bold typography. Date: Donnerstag, 12. Maerz 2026. Location: De Vierkant. Hazard stripes border. Countdown timer effect.
+DURATION: 5.0s
+IMAGE REFS: 
+SUBTITLE: Donnerstag, 12. Maerz 2026 -- De Vierkant

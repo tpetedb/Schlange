@@ -1,0 +1,169 @@
+# Video Specification — Smutzige Hansi Remix
+# CHAOTIC ENGINEERING PROGRAM
+# Canonical event date: Thursday, 12 March 2026
+
+meta:
+  title: "CHAOTIC ENGINEERING PROGRAM — Smutzige Hansi Remix"
+  duration_target: "45-60 seconds"
+  language: "German (primary)"
+  tone: "Bombastic, absurd, over-engineered chaos"
+  format: "MP4 1080p"
+
+reference_assets:
+  video: "data/smutzige_hansie_video.mp4"
+  asset_dir: "data/"
+
+event:
+  date_iso: "2026-03-12"
+  date_de: "Donnerstag, 12. März 2026"
+  date_en: "Thursday, 12 March 2026"
+  date_nl: "Donderdag 12 maart 2026"
+  location: "De Vierkant"
+
+mandatory_content:
+  cow_line_de: "Die KI hat entschieden: Wir mieten eine riesige aufblasbare Kuh, aus der man Bier melken kann."
+  cow_line_en: "The AI has decided: We're renting a giant inflatable cow that dispenses beer."
+  cow_line_nl: "De AI heeft besloten: We huren een gigantische opblaasbare koe waar je bier uit kunt melken."
+  closing_de: "Sei dabei -- oder sei ein Viereck."
+  closing_en: "Be there -- or be square."
+  closing_nl: "Wees erbij -- of wees een vierkant."
+
+scenes:
+  - id: "explosion_intro"
+    duration: 4
+    type: "title_card"
+    prompt: >
+      Explosive opening. Black screen, then massive explosion overlay.
+      Title text slams in: "CHAOTIC ENGINEERING PROGRAM".
+      Subtitle: "Eine Smutzige Hansi Produktion".
+      Fire particles, screen shake, impact sound.
+    subtitle: "CHAOTIC ENGINEERING PROGRAM"
+    narration: ""
+    validation:
+      - "CHAOTIC ENGINEERING PROGRAM"
+
+  - id: "hansi_intro"
+    duration: 5
+    type: "narration_over_footage"
+    prompt: >
+      Smutzige Hansi appears. Reference footage from data/.
+      Dramatic entrance, slow-motion effect, lens flare.
+    subtitle: "Ich gehe bald..."
+    narration: >
+      Ich gehe bald...
+      Letzter Lacher fuer meine geliebten Kolleginnen und Kollegen.
+    validation:
+      - "Ich gehe bald"
+      - "Letzter Lacher"
+
+  - id: "coding_chaos"
+    duration: 8
+    type: "montage"
+    prompt: >
+      Meme-cat chaotic coding energy. Smutzige Hansi typing aggressively
+      at a laptop. Overdramatic zooms. Terminal text flying across screen.
+      Schlange keywords visible: importiert, probiert, gibzurueck, als.
+      Explosion overlays. Fast cuts. Matrix rain of German keywords.
+    subtitle: "PROBIERT * AUSSER * ENDLICH"
+    narration: >
+      Smutzige Hansi hat nicht einfach gekuendigt.
+      Smutzige Hansi hat eine Programmiersprache gebaut.
+      Und damit ein chaotisches Abschiedsprogramm gestartet.
+    validation:
+      - "Programmiersprache"
+      - "chaotisches Abschiedsprogramm"
+      - "importiert"
+      - "probiert"
+      - "gibzurueck"
+
+  - id: "schlange_reveal"
+    duration: 6
+    type: "reveal"
+    prompt: >
+      Screen shows Schlange code transforming into Python.
+      Split screen: German keywords on left, Python on right.
+      verkuendet becomes print. defn becomes def.
+      Dramatic reveal: "SCHLANGE -- Python auf Deutsch"
+    subtitle: "SCHLANGE -- Python auf Deutsch"
+    narration: >
+      Schlange -- ein deutscher Python-Interpreter-Wrapper.
+      Weil normale Programmierung zu langweilig war.
+    validation:
+      - "Schlange"
+      - "Python"
+
+  - id: "playlist_reveal"
+    duration: 6
+    type: "reveal"
+    prompt: >
+      Spotify playlist "Tom 2000" appears on screen.
+      2000 tracks scroll past dramatically.
+      Play counts and hours displayed.
+      Music visualization in background.
+    subtitle: "TOM 2000 -- 2000 Tracks. 5706 Stunden."
+    narration: >
+      Tom 1000? Zu wenig.
+      Tom 2000 -- featuring Schlange.
+      Automatisch generiert aus 4.5 Jahren Spotify-Geschichte.
+    validation:
+      - "Tom 2000"
+      - "Schlange"
+
+  - id: "cow_announcement"
+    duration: 6
+    type: "announcement"
+    prompt: >
+      Giant inflatable beer cow appears on screen.
+      Dramatic zoom. Confetti explosion.
+      Beer taps attached to cow udders.
+      Everyone looks shocked and delighted.
+    subtitle: "Die KI hat entschieden..."
+    narration: >
+      Die KI hat entschieden: Wir mieten eine riesige aufblasbare Kuh,
+      aus der man Bier melken kann.
+    validation:
+      - "aufblasbare Kuh"
+      - "Bier melken"
+
+  - id: "event_cta"
+    duration: 5
+    type: "event_card"
+    prompt: >
+      Clean event card with bold typography.
+      Date: Donnerstag, 12. Maerz 2026
+      Location: De Vierkant
+      Hazard stripes border.
+      Countdown timer effect.
+    subtitle: "Donnerstag, 12. Maerz 2026 -- De Vierkant"
+    narration: >
+      Donnerstag, 12. Maerz 2026.
+      De Vierkant.
+    validation:
+      - "12. Maerz 2026"
+      - "De Vierkant"
+
+  - id: "closing"
+    duration: 5
+    type: "closing"
+    prompt: >
+      Final explosion. Smutzige Hansi walks away from the camera.
+      Text appears: "Sei dabei -- oder sei ein Viereck."
+      Powered by Schlange logo.
+      Fade to black.
+    subtitle: "Sei dabei -- oder sei ein Viereck."
+    narration: >
+      Sei dabei -- oder sei ein Viereck.
+    validation:
+      - "Sei dabei"
+      - "Viereck"
+
+output:
+  video: "out/video/final.mp4"
+  script: "out/video/script_de.txt"
+  subtitles: "out/video/subtitles.srt"
+  metadata: "out/video/metadata.json"
+  frames:
+    - "out/email/img/frame_01.jpg"
+    - "out/email/img/frame_02.jpg"
+    - "out/email/img/frame_03.jpg"
+    - "out/email/img/frame_04.jpg"

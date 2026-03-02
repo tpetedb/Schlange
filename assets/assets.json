@@ -1,54 +1,64 @@
 {
-  "title": "SCHLANGE PRESENTIERT: TOM 2000",
+  "title": "CHAOTIC ENGINEERING PROGRAM -- Smutzige Hansi Remix",
+  "event_date": "2026-03-12",
+  "event_location": "De Vierkant",
+  "duration_target": "45-60 seconds",
   "scenes": [
     {
-      "scene_id": "intro",
-      "prompt": "A man in traditional Bavarian Lederhosen and a cowboy hat walks into a modern tech office. He carries a laptop under one arm. The office has RGB lighting and monitors everywhere. Cinematic, comedic tone.",
+      "scene_id": "explosion_intro",
+      "prompt": "Explosive opening. Black screen, then massive explosion overlay. Title text slams in: CHAOTIC ENGINEERING PROGRAM. Subtitle: Eine Smutzige Hansi Produktion. Fire particles, screen shake, impact sound.",
       "duration_seconds": 4.0,
       "image_refs": [],
-      "subtitle": "SCHLANGE PRESENTIERT"
+      "subtitle": "CHAOTIC ENGINEERING PROGRAM"
     },
     {
-      "scene_id": "coding",
-      "prompt": "Close-up of a screen showing Python code with German keywords like 'defn', 'sofern', 'verkuendet'. The code is being typed live. Matrix-like green text reflections on glasses.",
+      "scene_id": "hansi_intro",
+      "prompt": "Smutzige Hansi appears. Reference footage from data/. Dramatic entrance, slow-motion effect, lens flare.",
       "duration_seconds": 5.0,
+      "image_refs": ["data/smutzige_hansie_video.mp4"],
+      "subtitle": "Ich gehe bald..."
+    },
+    {
+      "scene_id": "coding_chaos",
+      "prompt": "Meme-cat chaotic coding energy. Smutzige Hansi typing aggressively at a laptop. Overdramatic zooms. Terminal text flying across screen. Schlange keywords visible: importiert, probiert, gibzurueck. Explosion overlays. Fast cuts. Matrix rain of German keywords.",
+      "duration_seconds": 8.0,
       "image_refs": [],
       "subtitle": "PROBIERT * AUSSER * ENDLICH"
     },
     {
-      "scene_id": "data_wizardry",
-      "prompt": "A dramatic montage of data flowing through pipes, transforming from raw JSON into a beautiful ranked playlist. Databricks-style notebook interface visible. Sparks and lightning effects.",
-      "duration_seconds": 5.0,
+      "scene_id": "schlange_reveal",
+      "prompt": "Screen shows Schlange code transforming into Python. Split screen: German keywords on left, Python on right. verkuendet becomes print. defn becomes def. Dramatic reveal: SCHLANGE -- Python auf Deutsch.",
+      "duration_seconds": 6.0,
       "image_refs": [],
-      "subtitle": "2000 Tracks analysiert..."
+      "subtitle": "SCHLANGE -- Python auf Deutsch"
     },
     {
       "scene_id": "playlist_reveal",
-      "prompt": "A big screen in the office shows the 'Tom 2000' Spotify playlist with 2000 tracks. People gather around. The playlist starts playing. Everyone nods to the beat.",
+      "prompt": "Spotify playlist Tom 2000 appears on screen. 2000 tracks scroll past dramatically. Play counts and hours displayed. Music visualization in background.",
+      "duration_seconds": 6.0,
+      "image_refs": [],
+      "subtitle": "TOM 2000 -- 2000 Tracks. 5706 Stunden."
+    },
+    {
+      "scene_id": "cow_announcement",
+      "prompt": "Giant inflatable beer cow appears on screen. Dramatic zoom. Confetti explosion. Beer taps attached to cow udders. Everyone looks shocked and delighted.",
+      "duration_seconds": 6.0,
+      "image_refs": [],
+      "subtitle": "Die KI hat entschieden..."
+    },
+    {
+      "scene_id": "event_cta",
+      "prompt": "Clean event card with bold typography. Date: Donnerstag, 12. Maerz 2026. Location: De Vierkant. Hazard stripes border. Countdown timer effect.",
       "duration_seconds": 5.0,
       "image_refs": [],
-      "subtitle": "TOM 2000 -- Die Playlist"
+      "subtitle": "Donnerstag, 12. Maerz 2026 -- De Vierkant"
     },
     {
-      "scene_id": "dj_moment",
-      "prompt": "The man is now behind a DJ booth in the office, wearing a Lederhosen-DJ hybrid outfit. He's mixing tracks while data visualizations dance on screens behind him. Epic lighting.",
-      "duration_seconds": 4.0,
-      "image_refs": [],
-      "subtitle": "Der Buereau-DJ"
-    },
-    {
-      "scene_id": "beer_cow",
-      "prompt": "A rubber cow wearing a tiny pair of Lederhosen sits next to a beer stein on the DJ booth. Confetti falls. The cow has sunglasses. Pure absurdity.",
-      "duration_seconds": 3.0,
-      "image_refs": [],
-      "subtitle": "Smutsahansi approved"
-    },
-    {
-      "scene_id": "qr_code",
-      "prompt": "Clean black screen with a large QR code in the center. Text above reads 'SCAN FOR TOM 2000'. Text below reads 'Powered by Schlange'. Minimal, clean design.",
+      "scene_id": "closing",
+      "prompt": "Final explosion. Smutzige Hansi walks away from the camera. Text appears: Sei dabei -- oder sei ein Viereck. Powered by Schlange logo. Fade to black.",
       "duration_seconds": 5.0,
       "image_refs": [],
-      "subtitle": "Scan mich!"
+      "subtitle": "Sei dabei -- oder sei ein Viereck."
     }
   ]
 }
