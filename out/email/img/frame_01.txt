@@ -1,0 +1,3 @@
+PLACEHOLDER FRAME 1
+Caption: Smutzige Hansi beim letzten Commit
+Resolution: 1280x720

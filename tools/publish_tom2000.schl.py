@@ -24,7 +24,7 @@ importiert json
 von dotenv importiert load_dotenv
 von schlange.spotify.playlist importiert PlaylistBuilder
 
-
+ 
 defn banner():
     """Der Veroeffentlichungs-Banner."""
     verkuendet("")

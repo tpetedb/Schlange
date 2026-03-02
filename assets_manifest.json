@@ -1,0 +1,28 @@
+{
+  "reference_video": "data/smutzige_hansie_video.mp4",
+  "video_exists": true,
+  "video_size_mb": 8.1,
+  "frames": [
+    {
+      "path": "out/email/img/frame_01.txt",
+      "exists": true,
+      "index": 1
+    },
+    {
+      "path": "out/email/img/frame_02.txt",
+      "exists": true,
+      "index": 2
+    },
+    {
+      "path": "out/email/img/frame_03.txt",
+      "exists": true,
+      "index": 3
+    },
+    {
+      "path": "out/email/img/frame_04.txt",
+      "exists": true,
+      "index": 4
+    }
+  ],
+  "frame_count": 4
+}

@@ -1,0 +1,5 @@
+SCENE: coding_chaos
+PROMPT: Meme-cat chaotic coding energy. Smutzige Hansi typing aggressively at a laptop. Overdramatic zooms. Terminal text flying across screen. Schlange keywords visible: importiert, probiert, gibzurueck. Explosion overlays. Fast cuts. Matrix rain of German keywords.
+DURATION: 8.0s
+IMAGE REFS: 
+SUBTITLE: PROBIERT * AUSSER * ENDLICH
