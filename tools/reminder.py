@@ -42,8 +42,7 @@ def build_reminder_html() -> str:
             "greeting": "Liebe Kolleginnen und Kollegen,",
             "reminder": "Dies ist eine freundliche Erinnerung:",
             "party_line": (
-                "<strong>Smutzige Hansie verlasst YoungOnes</strong> -- "
-                "und seine letzte Party ist naechste Woche!"
+                "<strong>Smutzige Hansie verlasst YoungOnes</strong> -- " "und seine letzte Party ist naechste Woche!"
             ),
             "event_title": "DAS EVENT",
             "event_date": "Donnerstag, 12. Maerz 2026",
@@ -83,8 +82,7 @@ def build_reminder_html() -> str:
             "greeting": "Dear colleagues,",
             "reminder": "This is a friendly reminder:",
             "party_line": (
-                "<strong>Smutzige Hansie is leaving YoungOnes</strong> -- "
-                "and his last party is next week!"
+                "<strong>Smutzige Hansie is leaving YoungOnes</strong> -- " "and his last party is next week!"
             ),
             "event_title": "THE EVENT",
             "event_date": "Thursday, 12 March 2026",
@@ -124,8 +122,7 @@ def build_reminder_html() -> str:
             "greeting": "Beste collega's,",
             "reminder": "Dit is een vriendelijke herinnering:",
             "party_line": (
-                "<strong>Smutzige Hansie verlaat YoungOnes</strong> -- "
-                "en zijn laatste feest is volgende week!"
+                "<strong>Smutzige Hansie verlaat YoungOnes</strong> -- " "en zijn laatste feest is volgende week!"
             ),
             "event_title": "HET EVENT",
             "event_date": "Donderdag 12 maart 2026",

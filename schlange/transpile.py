@@ -69,6 +69,7 @@ def _rewrite_tokens(source: str) -> str:
 # Pre-pass: anfuehrungszeichen -> actual quotes
 # ---------------------------------------------------------------------------
 
+
 def _build_quote_pattern() -> re.Pattern[str]:
     """Build a regex that matches quote words with surrounding whitespace.
 
@@ -121,8 +122,8 @@ def _apply_quote_prepass(source: str) -> str:
         open_stack: list[str] = []
 
         def replacer(match: re.Match[str]) -> str:
-            leading = match.group(1)   # space before the word
-            word = match.group(2)      # the quote word
+            leading = match.group(1)  # space before the word
+            word = match.group(2)  # the quote word
             trailing = match.group(3)  # space after the word
 
             if open_stack:
