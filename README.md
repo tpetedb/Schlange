@@ -10,9 +10,7 @@ Schlange is a Germanized Python preprocessor. You write code using German keywor
 
 ## But why?
 
-Because normal programming was too boring. Because someone had to prove that Python sounds better in German. Because `gibzurueck` is objectively funnier than `return`.
-
-And because **Smutzige Hansie is leaving YoungOnes**, and this was a perfectly reasonable use of engineering time.
+Because Hansie schprecht kein anglisch
 
 ---
 
