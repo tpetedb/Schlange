@@ -1,0 +1,211 @@
+# Maximal doc-doc configuration for Schlange (a Germanized Python preprocessor).
+#
+# This file is deliberately maximal: it turns on the whole doc-doc feature
+# surface at once. The LLM endpoint comes from the environment
+# (DOCDOC_LLM_BASE_URL points at the local claude bridge on port 8788), so
+# base_url is intentionally unset in [llm.engine] and every sidecar. The only
+# external services left out are Jira, Confluence, and a Vault secret backend,
+# which would each need a mock or a running server we are not starting here.
+
+[project]
+provider = "github"
+github_repo = "tpetedb/Schlange"
+description = "A Germanized Python preprocessor: write Python with German keywords and translate it back to runnable Python, with a small tooling and examples suite around the translator."
+
+# --- The model that writes the docs -------------------------------------------
+# base_url is intentionally unset so it falls back to DOCDOC_LLM_BASE_URL, which
+# points at the local claude bridge. The key stays in the env var named by
+# api_key_env and never in this file. method_skill injects the packaged "fable"
+# working method (plan first, ground every claim, verify before emitting) into
+# every writing and planning prompt.
+[llm]
+method_skill = "fable"
+
+[llm.engine]
+provider = "openai"
+model = "opus"
+api_key_env = "DOCDOC_LLM_API_KEY"
+reasoning_depth = "high"        # minimal, low, medium, high
+temperature = 0.2
+base_prompt = "You are a senior engineer who keeps documentation accurate, concise, and grounded in the real code. Never invent facts, and prefer plain sentences over marketing."
+
+# --- Per-task specialist models (a sidecar per task) --------------------------
+# Every task routes to its own engine. Here each one points at the same bridge
+# model so the demo needs only one endpoint, while doc-doc logs the model per
+# task and the run trace records the routing. An omitted table would fall back
+# to [llm.engine]; spelling them all out exercises the router.
+[llm.mermaid]     # writes any document that carries a mermaid diagram
+provider = "openai"
+model = "opus"
+api_key_env = "DOCDOC_LLM_API_KEY"
+
+[llm.changelog]   # authors the CHANGELOG from commit history
+provider = "openai"
+model = "opus"
+api_key_env = "DOCDOC_LLM_API_KEY"
+
+[llm.repair]      # runs the single deterministic-validation repair pass
+provider = "openai"
+model = "opus"
+api_key_env = "DOCDOC_LLM_API_KEY"
+
+[llm.reasoning]   # drafts the plan for the reasoning pre-pass below
+provider = "openai"
+model = "opus"
+api_key_env = "DOCDOC_LLM_API_KEY"
+
+[llm.vault]       # writes each Obsidian vault note
+provider = "openai"
+model = "opus"
+api_key_env = "DOCDOC_LLM_API_KEY"
+
+# --- Reasoning-trace planner --------------------------------------------------
+# Before each document is written, the reasoning model drafts a short plan from
+# the scaffold and context, and the plan steers the writer. It adds one model
+# call per document; any planning error is swallowed and never breaks a run.
+[reasoning]
+enabled = true
+max_tokens = 800
+
+# --- Documents to generate (one to five) --------------------------------------
+# README.md from the readme template, with a mermaid architecture diagram.
+[[documents]]
+location = "README.md"
+template = "readme"
+prompt = "Document Schlange for a new contributor: what the German-keyword preprocessor does, how to install it, how to translate a .schl.py source into runnable Python, and how the translator, tooling, and examples fit together. Include a diagram of the translation flow."
+audience = "maintainer"
+mermaid_enabled = true
+
+# An architecture doc whose sections are pinned by headers, with a mermaid
+# diagram of how a source file flows through the translator to Python output.
+[[documents]]
+location = "docs/architecture.md"
+template = "architecture"
+prompt = "Explain the moving parts of Schlange for an engineer joining the project: how the keyword dictionary, the translator, and the tooling relate, and how one .schl.py file is turned into executable Python. Show the pipeline as a flowchart."
+audience = "maintainer"
+mermaid_enabled = true
+headers = [
+  { level = 1, title = "Schlange architecture" },
+  { level = 2, title = "Overview" },
+  { level = 2, title = "Components" },
+  { level = 2, title = "Translation pipeline" },
+  { level = 2, title = "Design decisions" },
+]
+
+# A quickstart for a brand new user, written for a different audience.
+[[documents]]
+location = "docs/quickstart.md"
+template = "quickstart"
+prompt = "Get a brand new user from install to running their first Germanized Python program in a couple of minutes, using one of the bundled examples."
+audience = "user"
+mermaid_enabled = false
+
+# A contributing guide from the contributing template.
+[[documents]]
+location = "CONTRIBUTING.md"
+template = "contributing"
+prompt = "Tell a new contributor how to set up the project, run the tests, add a keyword to the dictionary, and open a change on Schlange."
+audience = "contributor"
+mermaid_enabled = false
+
+# --- CHANGELOG.md -------------------------------------------------------------
+[changelog]
+enabled = true
+location = "CHANGELOG.md"
+style = "keep-a-changelog"
+
+# --- Publishing (inert seam) --------------------------------------------------
+# Carried to the Confluence publisher for any http(s) document target. No
+# document here targets a URL, so this stays inert; it is wired to show the
+# config surface. Publishing also needs a token that resolves through the
+# secret store, which is not set, so every remote target would simply be
+# skipped with a warning.
+[publishing]
+confluence_space = "SCHLANGE"
+confluence_parent_page = ""
+
+# --- Diagram validation ---------------------------------------------------------
+# Deterministic autofixes run first, then each still-broken mermaid block gets
+# focused retries with the exact validator failures in the prompt, and anything
+# unfixable is demoted to a plain text fence instead of rendering broken.
+[validation]
+mermaid_retries = 2
+mermaid_fallback = "code"       # code, keep
+
+# --- Obsidian-style vault -------------------------------------------------------
+# Turns the code base into a visual, linked web: one note per selected module
+# plus an INDEX map, each with a mermaid diagram and [[wikilinks]]. Each note is
+# one model call, so max_notes is the budget knob; kept modest here.
+[vault]
+enabled = true
+dir = "docs/vault"
+max_notes = 6
+mermaid_enabled = true
+
+# --- Ephemeral sandbox ----------------------------------------------------------
+# Probe commands run against a snapshot of the ref in a disposable environment,
+# and their real output feeds the model as execution context. backend "auto"
+# uses docker when available, else local only inside a container, else skips
+# with a warning. The probes are gentle and cannot hang: no build, no import of
+# the non-standard .schl.py sources.
+[sandbox]
+enabled = true
+backend = "auto"                # auto, docker, local
+commands = [
+  "python3 --version",
+  "ls -la",
+  "head -40 pyproject.toml",
+]
+timeout_seconds = 60
+max_output_chars = 4000
+network = "none"                # none, bridge
+
+# --- When CI invokes doc-doc --------------------------------------------------
+[triggers]
+run_on_commit = true
+run_on_merge_request = true                   # enforced by --ci
+release_prefixes = ["feat", "fix", "perf"]    # advisory hint for the CI rules
+ignore_prefixes = ["chore", "docs", "ci"]     # skip only when every new commit is an ignored type
+
+# --- External context: fixed web pages ----------------------------------------
+# A fixed list of pages fetched without credentials and reduced to plain text,
+# capped at max_chars. Each fetch has its own short timeout and any failure
+# degrades to no context with one warning, so this never blocks a run. Jira and
+# Confluence sources are intentionally left out (they need a real instance).
+[context.web]
+enabled = true
+urls = [
+  "https://github.com/tpetedb/Schlange",
+  "https://docs.python.org/3/",
+]
+max_chars = 3000
+
+# --- Secret store -------------------------------------------------------------
+# The environment is always consulted first. The default env backend is spelled
+# out here; no external secret manager is used, so every token resolves from the
+# DOCDOC_* environment variables.
+[secrets]
+backend = "env"
+
+# --- Logging ------------------------------------------------------------------
+# trace commits one Markdown run-trace file per run into trace_dir alongside the
+# generated docs: models, token counts, the reasoning plan per document, and the
+# validation outcomes. status appends one JSON line per run to
+# docs/logs/doc-doc.log: ok, or the issues the run could not fix, which the next
+# run reads back and retries.
+[logging]
+enabled = true
+level = "info"                  # debug, info, warning, error
+trace = true
+trace_dir = "docs/logs"
+status = true
+
+# --- Run metadata (written by doc-doc after each run; do not edit by hand) -----
+[run]
+last_run_at = ""
+model = ""
+reasoning_depth = ""
+repo_sha = ""
+branch = ""
+commits = []
+merge_requests = []
